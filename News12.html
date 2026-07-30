@@ -1,0 +1,1374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>News - ELITE Sports</title>
+  <style>
+    /* ── Reset ── */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: #0a0a0a;
+      color: #fff;
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    a { text-decoration: none; color: inherit; }
+    img { display: block; }
+
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #0a0a0a; }
+    ::-webkit-scrollbar-thumb { background: #10b981; border-radius: 3px; }
+
+    /* ── Animations ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    @keyframes slide {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .bg-vid {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      z-index: -1;
+    }
+
+    .bg-vid img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .bg-vid::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:#000000;
+      color:white;
+    }
+    
+    .page {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── Glass ── */
+    .glass {
+      background: rgba(255,255,255,0.05);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    /* ── Navigation — 100% MATCHING INDEX ── */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 50;
+      height: 64px;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: transparent;
+      border-bottom: none;
+      transition: background 0.4s ease, border-color 0.4s ease;
+    }
+
+    .nav.scrolled {
+      background: rgba(10, 10, 10, 0.85);
+      backdrop-filter: blur(24px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+    }
+
+    .nav-links {
+      display: none;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .nav-link {
+      padding: 8px 16px;
+      font-size: 14px;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.7);
+      border-radius: 9999px;
+      transition: color 0.2s, background 0.2s;
+      white-space: nowrap;
+    }
+
+    .nav-link:hover {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .nav-link.active {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
+    .nav-menu-btn {
+      display: none;
+      width: 40px;
+      height: 40px;
+      border: none;
+      background: none;
+      color: rgba(255, 255, 255, 0.7);
+      border-radius: 9999px;
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+      transition: color 0.2s;
+    }
+
+    .nav-menu-btn:hover {
+      color: #fff;
+    }
+
+    @media (min-width: 1024px) {
+      .nav-links { display: flex; }
+    }
+
+    @media (max-width: 1023px) {
+      .nav-menu-btn { display: flex; }
+    }
+
+    /* ── Mobile Menu ── */
+    .mob-menu {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 60;
+      background: rgba(10, 10, 10, 0.95);
+      backdrop-filter: blur(24px);
+      padding: 80px 24px 24px;
+      display: none;
+      flex-direction: column;
+    }
+
+    .mob-menu.open { display: flex; }
+
+    .mob-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 40px;
+      height: 40px;
+      border: none;
+      background: rgba(255,255,255,0.1);
+      color: #fff;
+      border-radius: 9999px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .mob-link {
+      padding: 16px;
+      font-size: 18px;
+      font-weight: 700;
+      color: #a3a3a3;
+      border-radius: 12px;
+      transition: 0.2s;
+    }
+
+    .mob-link:hover {
+      color: #fff;
+      background: rgba(255,255,255,0.05);
+    }
+
+    .mob-link.on {
+      color: #fff;
+      background: rgba(255,255,255,0.1);
+    }
+
+    /* ── Breaking Ticker ── */
+    .ticker {
+      position: fixed;
+      top: 64px;
+      left: 0;
+      right: 0;
+      z-index: 40;
+      background: #dc2626;
+      padding: 8px 0;
+      overflow: hidden;
+    }
+
+    .ticker-inner {
+      display: flex;
+      align-items: center;
+    }
+
+    .ticker-label {
+      flex-shrink: 0;
+      padding: 4px 16px;
+      background: #b91c1c;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .ticker-dot {
+      width: 6px;
+      height: 6px;
+      background: #fff;
+      border-radius: 50%;
+      animation: blink 1.5s infinite;
+    }
+
+    .ticker-scroll {
+      overflow: hidden;
+      flex: 1;
+    }
+
+    .ticker-track {
+      display: flex;
+      animation: slide 30s linear infinite;
+      white-space: nowrap;
+    }
+
+    .ticker-item {
+      padding: 0 32px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    /* ── Container ── */
+    .wrap {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ── Hero Section ── */
+    .hero {
+      padding: 140px 0 48px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+
+    @media (min-width: 1024px) {
+      .hero-grid { grid-template-columns: 8fr 4fr; }
+    }
+
+    .hero-main {
+      position: relative;
+      height: 500px;
+      border-radius: 24px;
+      overflow: hidden;
+      transition: 0.5s;
+    }
+
+    .hero-main:hover {
+      transform: none;
+      box-shadow: none;
+    }
+
+    .hero-main img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: none;
+    }
+
+    .hero-main-grad {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, #000, rgba(0,0,0,0.5), transparent);
+      z-index: 1;
+    }
+
+    .hero-tags {
+      position: absolute;
+      top: 24px;
+      left: 24px;
+      display: flex;
+      gap: 8px;
+      z-index: 3;
+    }
+
+    .tag-live {
+      padding: 6px 12px;
+      background: #dc2626;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      border-radius: 9999px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .tag-pill {
+      padding: 6px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      border-radius: 9999px;
+    }
+
+    .hero-content {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 32px;
+      z-index: 3;
+    }
+
+    .hero-title {
+      font-size: 28px;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 16px;
+    }
+
+    @media (min-width: 768px) {
+      .hero-title { font-size: 48px; }
+    }
+
+    .hero-desc {
+      color: #d4d4d4;
+      margin-bottom: 24px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .hero-meta {
+      display: flex;
+      gap: 16px;
+    }
+
+    .hero-name { font-size: 14px; font-weight: 700; }
+    .hero-time { font-size: 12px; color: #737373; }
+
+    .hero-side {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .side-card {
+      flex: 1;
+      position: relative;
+      min-height: 238px;
+      border-radius: 24px;
+      overflow: hidden;
+      transition: 0.5s;
+    }
+
+    .side-card:hover {
+      transform:none;
+      box-shadow:none;
+    }
+
+    .side-card img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: none;
+    }
+
+    .side-grad {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, #000, rgba(0,0,0,0.6), transparent);
+      z-index: 1;
+    }
+
+    .side-tag {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      padding: 4px 10px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      border-radius: 9999px;
+      z-index: 3;
+    }
+
+    .side-content {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 24px;
+      z-index: 3;
+    }
+
+    .side-title {
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 1.3;
+      transition: 0.3s;
+    }
+
+    @media (min-width: 768px) {
+      .side-title { font-size: 20px; }
+    }
+
+    .side-title:hover { color: #34d399; }
+
+    /* ── Filter Bar ── */
+    .filter {
+      padding: 16px 0;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.04);
+      backdrop-filter: blur(12px);
+      position: sticky;
+      top: 64px; /* Perfectly aligned below sticky navbar */
+      z-index: 30;
+    }
+
+    .filter-scroll {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+    }
+
+    .filter-scroll::-webkit-scrollbar { display: none; }
+
+    .f-btn {
+      flex-shrink: 0;
+      padding: 10px 20px;
+      font-size: 14px;
+      font-weight: 700;
+      border: none;
+      border-radius: 9999px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: 0.3s;
+    }
+
+    .f-btn svg { width: 18px; height: 18px; }
+
+    .f-on {
+      background: #10b981;
+      color: #000;
+    }
+
+    .f-off {
+      background: rgba(255,255,255,0.06);
+      color: #a3a3a3;
+    }
+
+    .f-off:hover {
+      background: rgba(255,255,255,0.12);
+      color: #d4d4d4;
+    }
+
+    /* ── Section ── */
+    .section { padding: 64px 0; }
+
+    .sec-head {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 40px;
+    }
+
+    .sec-label {
+      font-size: 14px;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: #34d399;
+    }
+
+    .sec-title {
+      font-size: 30px;
+      font-weight: 700;
+      margin-top: 8px;
+    }
+
+    @media (min-width: 768px) {
+      .sec-title { font-size: 36px; }
+    }
+
+    .sec-link {
+      display: none;
+      align-items: center;
+      gap: 8px;
+      color: #a3a3a3;
+      font-size: 14px;
+      font-weight: 600;
+      transition: 0.2s;
+    }
+
+    .sec-link:hover { color: #34d399; }
+
+    @media (min-width: 768px) {
+      .sec-link { display: flex; }
+    }
+
+    /* ── News Grid ── */
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+
+    @media (min-width: 768px) {
+      .grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (min-width: 1024px) {
+      .grid { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    /* ── News Card ── */
+    .card {
+      border-radius: 24px;
+      overflow: hidden;
+      background: #0F172A;
+      backdrop-filter: blur(16px);
+      border: 1px solid #334155;
+      display: flex;
+      flex-direction: column;
+      transition: 0.5s;
+    }
+
+    .card:hover{
+      transform:none;
+      box-shadow:none;
+    }
+
+    .card-img {
+      position: relative;
+      width: 100%;
+      height: 220px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .card-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: none;
+    }
+    .card-tag {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      padding: 4px 12px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      border-radius: 9999px;
+      z-index: 2;
+    }
+
+    .card-body {
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .card-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .card-author{
+      color:#FACC15;
+    }
+
+    .card-time{
+      color:#94A3B8;
+    }
+
+    .card-title {
+      font-size: 17px;
+      font-weight: 700;
+      line-height: 1.35;
+      margin-bottom: 10px;
+      color: #ffffff;
+      transition: 0.3s;
+    }
+
+    .card-desc {
+      font-size: 13px;
+      color: #CBD5E1;
+      line-height: 1.6;
+      flex: 1;
+      min-height: 42px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .card-stats {
+      display: flex;
+      gap: 16px;
+      margin-top: 20px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .card-stat {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      color: #94A3B8;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .card-stat svg { width: 14px; height: 14px; }
+
+    /* ── Tag Colors ── */
+    .t-em { background: rgba(16,185,129,0.2); color: #34d399; }
+    .t-pk { background: rgba(236,72,153,0.2); color: #f472b6; }
+    .t-rd { background: rgba(239,68,68,0.2); color: #f87171; }
+    .t-or { background: rgba(249,115,22,0.2); color: #fb923c; }
+    .t-yl { background: rgba(234,179,8,0.2); color: #facc15; }
+    .t-in { background: rgba(99,102,241,0.2); color: #818cf8; }
+    .t-pr { background: rgba(168,85,247,0.2); color: #c084fc; }
+
+    .a-em { background: rgba(16,185,129,0.1); }
+    .a-pk { background: rgba(236,72,153,0.1); }
+    .a-rd { background: rgba(239,68,68,0.1); }
+    .a-or { background: rgba(249,115,22,0.1); }
+    .a-yl { background: rgba(234,179,8,0.1); }
+    .a-in { background: rgba(99,102,241,0.1); }
+    .a-pr { background: rgba(168,85,247,0.1); }
+
+    /* ── Load More ── */
+    .load-wrap {
+      display: flex;
+      justify-content: center;
+      margin-top: 64px;
+    }
+
+    .load-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 32px;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: #fff;
+      font-size: 15px;
+      font-weight: 700;
+      border-radius: 9999px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .load-btn:hover {
+      background: #10b981;
+      color: #000;
+      border-color: #10b981;
+    }
+
+    .load-btn:hover svg { transform: rotate(180deg); }
+    .load-btn svg { transition: 0.5s; }
+
+    .load-btn.busy { pointer-events: none; opacity: 0.7; }
+    .load-btn.done { pointer-events: none; opacity: 0.4; }
+
+    /* ── Footer ── */
+    .footer {
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(20px);
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .foot-inner { padding: 64px 24px; }
+
+    .foot-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 48px;
+    }
+
+    @media (min-width: 768px) {
+      .foot-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (min-width: 1024px) {
+      .foot-grid { grid-template-columns: 2fr 1fr 1fr 1fr; }
+    }
+
+    .foot-desc {
+      color: #a3a3a3;
+      font-size: 14px;
+      line-height: 1.7;
+      margin-bottom: 24px;
+      max-width: 320px;
+    }
+
+    .foot-socials { display: flex; gap: 12px; }
+
+    .foot-soc {
+      width: 40px;
+      height: 40px;
+      border-radius: 9999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #a3a3a3;
+      transition: 0.3s;
+    }
+
+    .foot-soc:hover {
+      background: #10b981;
+      color: #000;
+    }
+
+    .foot-col-title {
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    .foot-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .foot-link {
+      color: #a3a3a3;
+      font-size: 14px;
+      transition: 0.2s;
+    }
+
+    .foot-link:hover { color: #34d399; }
+
+    .foot-bottom {
+      margin-top: 48px;
+      padding-top: 32px;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      align-items: center;
+    }
+
+    @media (min-width: 768px) {
+      .foot-bottom {
+        flex-direction: row;
+        justify-content: space-between;
+      }
+    }
+
+    .foot-copy { font-size: 14px; color: #737373; }
+
+    .foot-home {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #34d399;
+    }
+
+    /* ── Reveal on Scroll ── */
+    .rv {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: 0.8s;
+    }
+
+    .rv.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    .logo{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      text-decoration:none;
+      color:white;
+      font-size:24px;
+      font-weight:bold;
+    }
+
+    .logo img{
+      width:55px;
+      height:55px;
+      border-radius:50%;
+      object-fit:cover;
+    }
+
+    .anim1 { animation: fadeUp 0.8s ease-out forwards; }
+    .anim2 { animation: fadeUp 0.8s ease-out 0.2s forwards; opacity: 0; }
+  </style>
+</head>
+<body>
+
+  <!-- Background Video -->
+  <div class="bg-vid">
+    <img src="it's not summer but still.jpg" alt="Background Texture">
+  </div>
+
+  <div class="page">
+    <!-- Navigation — MATCHING INDEX -->
+    <nav class="nav" id="mainNav">
+      <div class="nav-left">
+        <a href="Index.html" class="logo">
+          <img src="okb.png" alt="Elite Sports Logo">
+        </a>
+        <div class="nav-links">
+          <a href="Index.html" class="nav-link">Home</a>
+          <a href="News12.html" class="nav-link active">News</a>
+          <a href="Scores.html" class="nav-link">Live Scores</a>
+          <a href="Schedule.html" class="nav-link">Schedule</a>
+          <a href="VIJAYBHAI.HTML" class="nav-link">Teams</a>
+          <a href="COACHESOFALL.HTML" class="nav-link">Coaches</a>
+          <a href="Shop.html" class="nav-link">Shop</a>
+        </div>
+      </div>
+      <div class="nav-right">
+        <!-- Clean Layout: Removed Search, Notif, Login & Signup structures -->
+        <button class="nav-menu-btn" id="menuBtn" aria-label="Menu">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+        </button>
+      </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="mob-menu" id="mobMenu">
+      <button class="mob-close" id="mobClose">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" x2="6" y1="6" y2="18"/><line x1="6" x2="18" y1="6" y2="18"/></svg>
+      </button>
+      <a href="Index.html" class="mob-link">Home</a>
+      <a href="News12.html" class="mob-link on">News</a>
+      <a href="Scores.html" class="mob-link">Live Scores</a>
+      <a href="Schedule.html" class="mob-link">Schedule</a>
+      <a href="VIJAYBHAI.HTML" class="mob-link">Teams</a>
+      <a href="COACHESOFALL.HTML" class="mob-link">Coaches</a>
+      <a href="Shop.html" class="mob-link">Shop</a>
+    </div>
+
+    <!-- Hero -->
+    <section class="hero">
+      <div class="wrap">
+        <div class="hero-grid">
+          <div class="hero-main anim1">
+            <img src="bhai.png" alt="Featured News Image" onerror="this.style.display='none'">
+            <div class="hero-main-grad"></div>
+            <div class="hero-tags">
+              <span class="tag-live">
+                <span class="ticker-dot"></span> Live
+              </span>
+              <span class="tag-pill glass">International Cricket</span>
+            </div>
+            <div class="hero-content">
+              <h1 class="hero-title">Vaibhav Make His Debut</h1>
+              <p class="hero-desc">The Wonder Guy Hit 2 Sixes in First Match</p>
+              <div class="hero-meta">
+                <p class="hero-name">CRICKINFO</p>
+                <p class="hero-time">15 minutes ago</p>
+              </div>
+            </div>
+          </div>
+          <div class="hero-side anim2">
+            <div class="side-card">
+              <img src="ind vs eng.png" alt="India vs England" onerror="this.style.display='none'">
+              <div class="side-grad"></div>
+              <span class="side-tag t-in">Ind Vs Eng</span>
+              <div class="side-content">
+                <h3 class="side-title">India Lost Second T20i</h3>
+              </div>
+            </div>
+            <div class="side-card">
+              <img src="nicky.jpg" alt="Neymar Junior" onerror="this.style.display='none'">
+              <div class="side-grad"></div>
+              <span class="side-tag t-pr">Neymar Junior</span>
+              <div class="side-content">
+                <h3 class="side-title">Neymar Announced His Retirement</h3>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Filter Bar -->
+    <section class="filter">
+      <div class="wrap">
+        <div class="filter-scroll">
+          <button class="f-btn f-on" data-f="all">All News</button>
+          <button class="f-btn f-off" data-f="football">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a15 15 0 0 0 0 20 15 15 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+            Football
+          </button>
+          <button class="f-btn f-off" data-f="basketball">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M4.93 4.93l4.24 4.24"/><path d="M14.83 14.83l4.24 4.24"/><path d="M14.83 9.17l4.24-4.24"/><path d="M9.17 14.83l-4.24 4.24"/></svg>
+            Basketball
+          </button>
+          <button class="f-btn f-off" data-f="tennis">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M5 5h14"/><path d="M5 5v14"/><path d="M19 5v14"/><path d="M5 19h14"/></svg>
+            Tennis
+          </button>
+          <button class="f-btn f-off" data-f="cricket">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12c0-3 2.5-7 5-9 1.5 2 2 4.5 2 7s-.5 5-2 7c-2.5-2-5-6-5-9Z"/><path d="M15 3c2 1.5 4 4.5 4 8s-2 6.5-4 8"/><path d="M12 3c1 2 1.5 4 1.5 7s-.5 5-1.5 7"/></svg>
+            Cricket
+          </button>
+          <button class="f-btn f-off" data-f="f1">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5.5 21a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 0 5Z"/><path d="M5 15V8a2 2 0 0 1 4 0v7"/><path d="M9 8a2 2 0 0 1 4 0v7"/><path d="M13 8a2 2 0 0 1 4 0v5a8 8 0 0 1-8 8h-1.5"/></svg>
+            F1
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- News Grid -->
+    <section class="section">
+      <div class="wrap">
+        <div class="sec-head rv">
+          <div>
+            <span class="sec-label">Latest Updates</span>
+            <h2 class="sec-title">Today's Top Stories</h2>
+          </div>
+          <a href="Index.html" class="sec-link">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2"><path d="m15 12-3-3-5 5"/><path d="M12 19V5"/></svg>
+            Back to Home
+          </a>
+        </div>
+
+        <div class="grid" id="grid">
+          <article class="card rv" data-cat="football">
+            <a href="#">
+              <div class="card-img">
+                <img src="auswomens.png" alt="" onerror="this.style.display='none'">
+                <span class="card-tag t-em">Football</span>
+              </div>
+              <div class="card-body">
+                <div class="card-meta">
+                  <span class="card-author">CRICKINFO</span>
+                  <span class="card-sep">•</span>
+                  <span class="card-time">2h ago</span>
+                </div>
+                <h3 class="card-title">Title Race Intensifies: Top Teams Clash in Derby</h3>
+                <p class="card-desc">The championship battle heats up as rivals prepare for a decisive encounter.</p>
+                <div class="card-stats">
+                  <span class="card-stat"></span>
+                </div>
+              </div>
+            </a>
+          </article>
+
+          <article class="card rv" data-cat="tennis">
+            <a href="#">
+              <div class="card-img">
+                <img src="kausal.png" alt="" onerror="this.style.display='none'">
+                <span class="card-tag t-pk">Tennis</span>
+              </div>
+              <div class="card-body">
+                <div class="card-meta">
+                  <span class="card-author">CRICKINFO</span>
+                  <span class="card-sep">•</span>
+                  <span class="card-time">3h ago</span>
+                </div>
+                <h3 class="card-title">Grand Slam Upset: Rising Star Beats World No.1</h3>
+                <p class="card-desc">19-year-old sensation advances to semifinals with straight-sets victory.</p>
+                <div class="card-stats">
+                  <span class="card-stat"></span>
+                </div>
+              </div>
+            </a>
+          </article>
+
+          <article class="card rv" data-cat="f1">
+            <a href="#">
+              <div class="card-img">
+                <img src="spain.png" alt="" onerror="this.style.display='none'">
+                <span class="card-tag t-rd">F1</span>
+              </div>
+              <div class="card-body">
+                <div class="card-meta">
+                  <span class="card-author">Elena Rodriguez</span>
+                  <span class="card-sep">•</span>
+                  <span class="card-time">4h ago</span>
+                </div>
+                <h3 class="card-title">New Regulations Shake Up F1: Teams React</h3>
+                <p class="card-desc">2025 season will see significant technical changes for safety.</p>
+                <div class="card-stats">
+                  <span class="card-stat"></span>
+                </div>
+              </div>
+            </a>
+          </article>
+
+          <article class="card rv" data-cat="basketball">
+            <a href="#">
+              <div class="card-img">
+                <img src="Latest team, player and league news _ NBA_com.jpg" alt="" onerror="this.style.display='none'">
+                <span class="card-tag t-or">NBA</span>
+              </div>
+              <div class="card-body">
+                <div class="card-meta">
+                  <span class="card-author">CRICKINFO</span>
+                  <span class="card-sep">•</span>
+                  <span class="card-time">5h ago</span>
+                </div>
+                <h3 class="card-title">MVP Race: Three-Way Battle for Top Honor</h3>
+                <p class="card-desc">Race for MVP has never been closer between three contenders.</p>
+                <div class="card-stats">
+                  <span class="card-stat"></span>
+                </div>
+              </div>
+            </a>
+          </article>
+
+          <article class="card rv" data-cat="cricket">
+            <a href="#">
+              <div class="card-img">
+                <img src="eng.png" alt="" onerror="this.style.display='none'">
+                <span class="card-tag t-yl">Cricket</span>
+              </div>
+              <div class="card-body">
+                <div class="card-meta">
+                  <span class="card-author">CRICKINFO</span>
+                  <span class="card-sep">•</span>
+                  <span class="card-time">6h ago</span>
+                </div>
+                <h3 class="card-title">World Cup Preview: Contenders and Dark Horses</h3>
+                <p class="card-desc">Teams to watch in the upcoming global tournament.</p>
+                <div class="card-stats">
+                  <span class="card-stat"></span>
+                </div>
+              </div>
+            </a>
+          </article>
+
+          <article class="card rv" data-cat="football">
+            <a href="#">
+              <div class="card-img">
+                <img src="FIFA World Cup 2026 Draw_ Live TV Channels, Streaming Options and Start Times Revealed.jpg" alt="" onerror="this.style.display='none'">
+                <span class="card-tag t-em">Football</span>
+              </div>
+              <div class="card-body">
+                <div class="card-meta">
+                  <span class="card-author">CRICKINFO</span>
+                  <span class="card-sep">•</span>
+                  <span class="card-time">7h ago</span>
+                </div>
+                <h3 class="card-title">Transfer Window: Biggest Deals and Surprises</h3>
+                <p class="card-desc">Most significant transfers during the winter window across Europe.</p>
+                <div class="card-stats">
+                  <span class="card-stat"></span>
+                </div>
+              </div>
+            </a>
+          </article>
+        </div>
+
+        <div class="load-wrap rv">
+          <button class="load-btn" id="loadBtn">
+            Load More Stories
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="foot-inner">
+        <div class="foot-grid">
+          <div>
+            <a href="Index.html" class="logo" style="margin-bottom:24px;">
+              <img src="okb.png" alt="Elite Sports Logo">
+            </a>
+            <p class="foot-desc">Your premier destination for live scores, breaking news, and exclusive sports coverage.</p>
+            <div class="foot-socials">
+              <a href="#" class="foot-soc glass">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+              </a>
+              <a href="#" class="foot-soc glass">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="20" x="2" y="2" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
+              </a>
+              <a href="#" class="foot-soc glass">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136C4.398 20.455 12 20.455 12 20.455s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+              </a>
+              <a href="#" class="foot-soc glass">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+              </a>
+            </div>
+          </div>
+          <div>
+            <h4 class="foot-col-title">Sports</h4>
+            <ul class="foot-list">
+              <li><a href="#" class="foot-link">Football</a></li>
+              <li><a href="#" class="foot-link">Basketball</a></li>
+              <li><a href="#" class="foot-link">Tennis</a></li>
+              <li><a href="#" class="foot-link">Formula 1</a></li>
+              <li><a href="#" class="foot-link">Cricket</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="foot-col-title">Company</h4>
+            <ul class="foot-list">
+              <li><a href="#" class="foot-link">About Us</a></li>
+              <li><a href="#" class="foot-link">Careers</a></li>
+              <li><a href="#" class="foot-link">Contact</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="foot-col-title">Legal</h4>
+            <ul class="foot-list">
+              <li><a href="#" class="foot-link">Privacy Policy</a></li>
+              <li><a href="#" class="foot-link">Terms of Use</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="foot-bottom">
+          <p class="foot-copy">© 2025 ELITE Sports. All rights reserved.</p>
+          <a href="Index.html" class="foot-home">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2"><path d="m15 12-3-3-5 5"/><path d="M12 19V5"/></svg>
+            Back to Home
+          </a>
+        </div>
+      </div>
+    </footer>
+
+  </div>
+
+  <script>
+    /* ── Elements ── */
+    var menuBtn = document.getElementById('menuBtn');
+    var mobMenu = document.getElementById('mobMenu');
+    var mobClose = document.getElementById('mobClose');
+    var nav = document.getElementById('mainNav');
+
+    /* ── Nav Scroll ── */
+    function handleNavScroll() {
+      if (window.scrollY > 80) {
+        nav.classList.add('scrolled');
+      } else {
+        nav.classList.remove('scrolled');
+      }
+    }
+    window.addEventListener('scroll', handleNavScroll);
+    window.addEventListener('load', handleNavScroll);
+
+    /* ── Mobile Menu ── */
+    menuBtn.addEventListener('click', function() {
+      mobMenu.classList.add('open');
+    });
+    mobClose.addEventListener('click', function() {
+      mobMenu.classList.remove('open');
+    });
+
+    /* ── Extra cards data ── */
+    var extra = [
+      {
+        cat: 'tennis', tag: 'Tennis',
+        tc: 't-pk', ac: 'a-pk',
+        author: 'Sarah Collins', time: '8h ago',
+        title: 'Australian Open Finals: Classic Rivalry Renewed',
+        desc: 'Two greatest players prepare for blockbuster final in Melbourne.',
+        views: '18.3K', comments: '267', saves: '1.5K',
+        img: 'https://images.unsplash.com/photo-1554068865-24cecd4e34b8?w=600&h=400&fit=crop'
+      },
+      {
+        cat: 'football', tag: 'Football',
+        tc: 't-em', ac: 'a-em',
+        author: 'Marcus Webb', time: '9h ago',
+        title: 'Young Prospect Signs Record Contract with European Giant',
+        desc: '17-year-old wonderkid commits to five-year deal worth $100 million.',
+        views: '27.6K', comments: '534', saves: '3.2K',
+        img: 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=600&h=400&fit=crop'
+      },
+      {
+        cat: 'basketball', tag: 'NBA',
+        tc: 't-or', ac: 'a-or',
+        author: 'Jake Thompson', time: '10h ago',
+        title: 'Trade Deadline: Multiple All-Stars on the Move',
+        desc: 'NBA trade deadline delivered shocking moves reshaping playoffs.',
+        views: '42.1K', comments: '891', saves: '4.7K',
+        img: 'https://images.unsplash.com/photo-1546519638-68e109498ffc?w=600&h=400&fit=crop'
+      }
+    ];
+
+    var loaded = 0;
+    var maxLoad = 2;
+    var curFilter = 'all';
+    var grid = document.getElementById('grid');
+    var loadBtn = document.getElementById('loadBtn');
+
+    var eyeSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/></svg>';
+    var chatSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-4z"/><path d="m15 5-3 3-5 4h4"/></svg>';
+    var saveSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>';
+
+    function cardHtml(d) {
+      return '<article class="card" data-cat="' + d.cat + '">' +
+        '<a href="#">' +
+          '<div class="card-img">' +
+            '<img src="' + d.img + '" alt="" onerror="this.style.display=\'none\'">' +
+            '<span class="card-tag ' + d.tc + '">' + d.tag + '</span>' +
+          '</div>' +
+          '<div class="card-body">' +
+            '<div class="card-meta">' +
+              '<span class="card-author">' + d.author + '</span>' +
+              '<span class="card-sep">•</span>' +
+              '<span class="card-time">' + d.time + '</span>' +
+            '</div>' +
+            '<h3 class="card-title">' + d.title + '</h3>' +
+            '<p class="card-desc">' + d.desc + '</p>' +
+            '<div class="card-stats">' +
+              '<span class="card-stat">' + eyeSvg + d.views + '</span>' +
+              '<span class="card-stat">' + chatSvg + d.comments + '</span>' +
+              '<span class="card-stat">' + saveSvg + d.saves + '</span>' +
+            '</div>' +
+          '</div>' +
+        '</a>' +
+      '</article>';
+    }
+
+    loadBtn.addEventListener('click', function() {
+      if (loaded >= maxLoad) return;
+
+      loadBtn.classList.add('busy');
+      loadBtn.innerHTML = 'Loading... <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation:spin 1s linear infinite"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>';
+
+      setTimeout(function() {
+        var html = '';
+        for (var i = 0; i < extra.length; i++) {
+          html += cardHtml(extra[i]);
+        }
+        grid.insertAdjacentHTML('beforeend', html);
+
+        var cards = grid.querySelectorAll('.card');
+        var start = cards.length - 3;
+        for (var j = start; j < cards.length; j++) {
+          (function(card, delay) {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(30px)';
+            setTimeout(function() {
+              card.style.transition = '0.6s ease';
+              card.style.opacity = '1';
+              card.style.transform = 'translateY(0)';
+            }, delay);
+          })(cards[j], (j - start) * 150);
+        }
+
+        loaded++;
+
+        if (loaded >= maxLoad) {
+          loadBtn.innerHTML = 'No More Stories';
+          loadBtn.classList.remove('busy');
+          loadBtn.classList.add('done');
+        } else {
+          loadBtn.classList.remove('busy');
+          loadBtn.innerHTML = 'Load More Stories <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>';
+        }
+
+        if (curFilter !== 'all') filter(curFilter);
+      }, 1200);
+    });
+
+    /* ── Filter ── */
+    var fBtns = document.querySelectorAll('.f-btn');
+    for (var i = 0; i < fBtns.length; i++) {
+      fBtns[i].addEventListener('click', function() {
+        filter(this.dataset.f);
+      });
+    }
+
+    function filter(cat) {
+      curFilter = cat;
+      var cards = grid.querySelectorAll('.card');
+
+      for (var i = 0; i < fBtns.length; i++) {
+        fBtns[i].className = 'f-btn f-off';
+      }
+      var activeBtn = document.querySelector('[data-f="' + cat + '"]');
+      if (activeBtn) activeBtn.className = 'f-btn f-on';
+
+      for (var j = 0; j < cards.length; j++) {
+        var show = (cat === 'all' || cards[j].dataset.cat === cat);
+        cards[j].style.display = show ? '' : 'none';
+        if (show) {
+          cards[j].style.animation = 'fadeUp 0.5s ease-out forwards';
+        }
+      }
+    }
+
+    /* ── Scroll Reveal ── */
+    var rvs = document.querySelectorAll('.rv');
+    function checkReveal() {
+      for (var i = 0; i < rvs.length; i++) {
+        if (rvs[i].getBoundingClientRect().top < window.innerHeight * 0.85) {
+          rvs[i].classList.add('show');
+        }
+      }
+    }
+    window.addEventListener('scroll', checkReveal);
+    window.addEventListener('load', checkReveal);
+  </script>
+
+</body>
+</html>

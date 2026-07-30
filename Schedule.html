@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cricket Stats Leaderboard — ELITE Sports</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background: #0a0a0a;
+      color: #fff;
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    a { text-decoration: none; color: inherit; }
+    ul { list-style: none; }
+    img { display: block; }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #0a0a0a; }
+    ::-webkit-scrollbar-thumb { background: #10b981; border-radius: 3px; }
+
+    /* ── Background Video ── */
+    .bg-video {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      z-index: 0; overflow: hidden;
+    }
+
+    .bg-video video {
+      width: 100%; height: 100%; object-fit: cover;
+      filter: contrast(1.1) brightness(0.9) saturate(1.1);
+    }
+
+    .bg-video::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(10, 10, 10, 0.65);
+    }
+
+    .page { position: relative; z-index: 1; }
+
+    /* ── Navigation (Same to Same) ── */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 50;
+      height: 64px;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: transparent;
+      transition: background 0.4s ease, border-color 0.4s ease;
+    }
+
+    .nav.scrolled {
+      background: rgba(10, 10, 10, 0.85);
+      backdrop-filter: blur(24px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .nav-left { display: flex; align-items: center; gap: 32px; }
+    .nav-links { display: none; gap: 8px; }
+
+    .nav-link {
+      padding: 8px 16px;
+      font-size: 14px;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.7);
+      border-radius: 9999px;
+      transition: color 0.2s, background 0.2s;
+    }
+
+    .nav-link:hover { color: #fff; background: rgba(255, 255, 255, 0.08); }
+    .nav-link.active { color: #fff; background: rgba(255, 255, 255, 0.1); }
+
+    .nav-right { display: flex; align-items: center; gap: 10px; }
+
+    .nav-menu-btn {
+      display: none; width: 40px; height: 40px; border: none;
+      background: none; color: rgba(255, 255, 255, 0.7);
+      border-radius: 9999px; cursor: pointer; align-items: center;
+      justify-content: center; transition: color 0.2s;
+    }
+
+    .nav-menu-btn:hover { color: #fff; }
+
+    @media (min-width: 1024px) { .nav-links { display: flex; } }
+    @media (max-width: 1023px) { .nav-menu-btn { display: flex; } }
+
+    /* ── Mobile Menu ── */
+    .mob-menu {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      z-index: 60; background: rgba(10, 10, 10, 0.95);
+      backdrop-filter: blur(24px); padding: 80px 24px 24px;
+      display: none; flex-direction: column;
+    }
+    .mob-menu.open { display: flex; }
+    .mob-close {
+      position: absolute; top: 16px; right: 16px; width: 40px; height: 40px;
+      border: none; background: rgba(255, 255, 255, 0.1); color: #fff;
+      border-radius: 9999px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+    }
+    .mob-link { padding: 16px; font-size: 18px; font-weight: 500; color: #a3a3a3; border-radius: 12px; transition: 0.2s; }
+    .mob-link:hover { color: #fff; background: rgba(255, 255, 255, 0.05); }
+
+    .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; color: white; font-size: 24px; font-weight: bold; }
+    .logo img { width: 55px; height: 55px; border-radius: 50%; object-fit: cover; }
+
+    /* ═══════════ CLEAN CATEGORY NAV ═══════════ */
+    .stats-category-bar {
+      position: sticky;
+      top: 64px;
+      z-index: 40;
+      background: rgba(10, 10, 10, 0.85);
+      backdrop-filter: blur(20px);
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      margin-top: 64px;
+    }
+
+    .tabs-wrapper {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-around;
+      overflow-x: auto;
+      padding: 0 16px;
+    }
+
+    .tabs-wrapper::-webkit-scrollbar { display: none; }
+
+    .clean-tab {
+      padding: 16px 24px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #a3a3a3;
+      background: none;
+      border: none;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.3s ease;
+      border-bottom: 2px solid transparent;
+      text-transform: capitalize;
+    }
+
+    .clean-tab:hover {
+      color: #fff;
+    }
+
+    .clean-tab.active {
+      color: #10b981;
+      border-bottom-color: #10b981;
+    }
+
+    /* ═══════════ MAIN STATS CONTAINER (LIST OF PLAYER + STATS PAIRS) ═══════════ */
+    .stats-container {
+      max-width: 1100px;
+      margin: 40px auto 80px;
+      padding: 0 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+
+    /* Single Player Row Unit (Image Left | Stats Right) */
+    .player-row-unit {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 28px;
+      align-items: stretch;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 20px;
+      padding: 20px;
+      backdrop-filter: blur(12px);
+      transition: border-color 0.3s, transform 0.3s;
+    }
+
+    .player-row-unit:hover {
+      border-color: rgba(16, 185, 129, 0.3);
+      transform: translateY(-2px);
+    }
+
+    @media (max-width: 768px) {
+      .player-row-unit {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Left Side: Player Image Frame */
+    .unit-image-box {
+      position: relative;
+      height: 260px;
+      border-radius: 14px;
+      overflow: hidden;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .unit-image-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .unit-rank-badge {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      padding: 4px 10px;
+      background: #10b981;
+      color: #000;
+      font-size: 11px;
+      font-weight: 800;
+      border-radius: 6px;
+      text-transform: uppercase;
+    }
+
+    /* Right Side: Transparent Player Stats Box */
+    .unit-stats-box {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 14px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .player-header-info {
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+
+    .player-title-name {
+      font-size: 24px;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .player-title-team {
+      font-size: 13px;
+      color: #a3a3a3;
+      font-weight: 600;
+    }
+
+    /* Stats Grid inside Individual Box */
+    .individual-stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    @media (max-width: 500px) {
+      .individual-stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .stat-metric-card {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 12px 16px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .metric-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: #737373;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .metric-value {
+      font-size: 20px;
+      font-weight: 800;
+      color: #10b981;
+    }
+
+    .metric-value.highlight-gold { color: #f59e0b; }
+    .metric-value.highlight-purple { color: #a855f7; }
+
+    /* ── Footer ── */
+    .footer { background: #000; border-top: 1px solid rgba(255, 255, 255, 0.05); }
+    .footer-inner { max-width: 1280px; margin: 0 auto; padding: 40px 24px; text-align: center; color: #737373; font-size: 14px; }
+  </style>
+</head>
+<body>
+
+  <!-- Background Video -->
+  <div class="bg-video">
+    <video autoplay muted loop playsinline>
+      <source src="home.mp4" type="video/mp4">
+    </video>
+  </div>
+
+  <div class="page">
+
+    <!-- Navbar -->
+    <nav class="nav" id="mainNav">
+      <div class="nav-left">
+        <a href="Index.html" class="logo">
+          <img src="okb.png" alt="Elite Sports Logo">
+        </a>
+        <div class="nav-links">
+          <a href="Index.html" class="nav-link">Home</a>
+          <a href="News12.html" class="nav-link">News</a>
+          <a href="Scores.html" class="nav-link">Live Scores</a>
+          <a href="Schedule.html" class="nav-link">Schedule</a>
+          <a href="VIJAYBHAI.HTML" class="nav-link">Teams</a>
+          <a href="COACHESOFALL.HTML" class="nav-link">Coaches</a>
+          <a href="Shop.html" class="nav-link">Shop</a>
+        </div>
+      </div>
+      <div class="nav-right">
+        <button class="nav-menu-btn" id="menuBtn" aria-label="Menu">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+        </button>
+      </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="mob-menu" id="mobMenu">
+      <button class="mob-close" id="mobClose">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" x2="6" y1="6" y2="18"/><line x1="6" x2="18" y1="6" y2="18"/></svg>
+      </button>
+      <a href="Index.html" class="mob-link">Home</a>
+      <a href="News12.html" class="mob-link">News</a>
+      <a href="Scores.html" class="mob-link">Live Scores</a>
+      <a href="Schedule.html" class="mob-link">Schedule</a>
+      <a href="VIJAYBHAI.HTML" class="mob-link">Teams</a>
+      <a href="COACHESOFALL.HTML" class="mob-link">Coaches</a>
+      <a href="Shop.html" class="mob-link">Shop</a>
+    </div>
+
+    <!-- ═══════════ CATEGORY TABS ═══════════ -->
+    <div class="stats-category-bar">
+      <div class="tabs-wrapper">
+        <button class="clean-tab active" onclick="switchCategory('orangecap', this)">🟠 Orange Cap</button>
+        <button class="clean-tab" onclick="switchCategory('purplecap', this)">🟣 Purple Cap</button>
+        <button class="clean-tab" onclick="switchCategory('fifties', this)">🏏 50's Leaderboard</button>
+        <button class="clean-tab" onclick="switchCategory('hundreds', this)">💯 100's Leaderboard</button>
+        <button class="clean-tab" onclick="switchCategory('icc', this)">🏆 ICC Rankings</button>
+      </div>
+    </div>
+
+    <!-- ═══════════ STATS LIST (5 PLAYERS PER CATEGORY) ═══════════ -->
+    <div class="stats-container" id="statsContainer">
+      <!-- Dynamically Rendered via JS -->
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-inner">
+        <p>© 2025 ELITE Sports. All rights reserved.</p>
+      </div>
+    </footer>
+
+  </div>
+
+  <script>
+    /* ── Comprehensive Data Set (Top 5 in every category) ── */
+    var dataset = {
+      orangecap: [
+        { name: 'Virat Kohli', team: 'RCB', img: 'KING-removebg-preview.png', rank: '#1 Leader', matches: 15, innings: 15, primaryLabel: 'Runs', primaryVal: 741, sr: '154.7', avg: '61.75', fifties: 5 },
+        { name: 'Ruturaj Gaikwad', team: 'CSK', img: 'RURURAJ-removebg-preview.png', rank: '#2 Rank', matches: 14, innings: 14, primaryLabel: 'Runs', primaryVal: 583, sr: '141.1', avg: '53.00', fifties: 4 },
+        { name: 'Travis Head', team: 'SRH', img: 'bhai.png', rank: '#3 Rank', matches: 15, innings: 15, primaryLabel: 'Runs', primaryVal: 567, sr: '191.5', avg: '40.50', fifties: 4 },
+        { name: 'Riyan Parag', team: 'RR', img: 'SARPANCH-removebg-preview.png', rank: '#4 Rank', matches: 15, innings: 14, primaryLabel: 'Runs', primaryVal: 573, sr: '149.2', avg: '52.09', fifties: 4 },
+        { name: 'Sai Sudharsan', team: 'GT', img: 'VAIBHAV1-removebg-preview.png', rank: '#5 Rank', matches: 12, innings: 12, primaryLabel: 'Runs', primaryVal: 527, sr: '141.2', avg: '47.91', fifties: 2 }
+      ],
+      purplecap: [
+        { name: 'Harshal Patel', team: 'PBKS', img: '33hp.png', rank: '#1 Leader', matches: 14, innings: 14, primaryLabel: 'Wickets', primaryVal: 24, eco: '9.73', avg: '19.87', customValClass: 'highlight-purple' },
+        { name: 'Varun Chakaravarthy', team: 'KKR', img: '96.png', rank: '#2 Rank', matches: 15, innings: 14, primaryLabel: 'Wickets', primaryVal: 21, eco: '8.04', avg: '19.14', customValClass: 'highlight-purple' },
+        { name: 'Jasprit Bumrah', team: 'MI', img: 'j1.jpg', rank: '#3 Rank', matches: 13, innings: 13, primaryLabel: 'Wickets', primaryVal: 20, eco: '6.48', avg: '16.80', customValClass: 'highlight-purple' },
+        { name: 'T Natarajan', team: 'SRH', img: 'siraj1.jpg', rank: '#4 Rank', matches: 14, innings: 14, primaryLabel: 'Wickets', primaryVal: 19, eco: '9.05', avg: '24.47', customValClass: 'highlight-purple' },
+        { name: 'Yuzvendra Chahal', team: 'RR', img: 'k1.jpg', rank: '#5 Rank', matches: 15, innings: 15, primaryLabel: 'Wickets', primaryVal: 18, eco: '9.41', avg: '30.33', customValClass: 'highlight-purple' }
+      ],
+      fifties: [
+        { name: 'Virat Kohli', team: 'RCB', img: 'KING-removebg-preview.png', rank: '#1 Leader', matches: 15, innings: 15, primaryLabel: "50's", primaryVal: 5, runs: 741, sr: '154.7', customValClass: 'highlight-gold' },
+        { name: 'Sanju Samson', team: 'RR', img: 'sanju1.jpg', rank: '#2 Rank', matches: 15, innings: 15, primaryLabel: "50's", primaryVal: 5, runs: 531, sr: '153.4', customValClass: 'highlight-gold' },
+        { name: 'Ruturaj Gaikwad', team: 'CSK', img: 'RURURAJ-removebg-preview.png', rank: '#3 Rank', matches: 14, innings: 14, primaryLabel: "50's", primaryVal: 4, runs: 583, sr: '141.1', customValClass: 'highlight-gold' },
+        { name: 'Riyan Parag', team: 'RR', img: 'SARPANCH-removebg-preview.png', rank: '#4 Rank', matches: 15, innings: 14, primaryLabel: "50's", primaryVal: 4, runs: 573, sr: '149.2', customValClass: 'highlight-gold' },
+        { name: 'KL Rahul', team: 'LSG', img: 'KLR1-removebg-preview.png', rank: '#5 Rank', matches: 14, innings: 14, primaryLabel: "50's", primaryVal: 4, runs: 520, sr: '136.1', customValClass: 'highlight-gold' }
+      ],
+      hundreds: [
+        { name: 'Virat Kohli', team: 'RCB', img: 'KING-removebg-preview.png', rank: '#1 Leader', matches: 15, innings: 15, primaryLabel: "100's", primaryVal: 2, runs: 741, sr: '154.7', customValClass: 'highlight-gold' },
+        { name: 'Travis Head', team: 'SRH', img: 'bhai.png', rank: '#2 Rank', matches: 15, innings: 15, primaryLabel: "100's", primaryVal: 1, runs: 567, sr: '191.5', customValClass: 'highlight-gold' },
+        { name: 'Sunil Narine', team: 'KKR', img: '96.png', rank: '#3 Rank', matches: 14, innings: 14, primaryLabel: "100's", primaryVal: 1, runs: 488, sr: '180.7', customValClass: 'highlight-gold' },
+        { name: 'Will Jacks', team: 'RCB', img: '33hp.png', rank: '#4 Rank', matches: 8, innings: 8, primaryLabel: "100's", primaryVal: 1, runs: 230, sr: '175.5', customValClass: 'highlight-gold' },
+        { name: 'Marcus Stoinis', team: 'LSG', img: 'h1.jpg', rank: '#5 Rank', matches: 14, innings: 14, primaryLabel: "100's", primaryVal: 1, runs: 388, sr: '147.5', customValClass: 'highlight-gold' }
+      ],
+      icc: [
+        { name: 'Suryakumar Yadav', team: 'IND (T20I)', img: 's1.jpg', rank: '#1 T20 Batter', matches: 68, innings: 64, primaryLabel: 'Rating', primaryVal: 861, sr: '167.7', avg: '44.5' },
+        { name: 'Jasprit Bumrah', team: 'IND (Test)', img: 'j1.jpg', rank: '#1 Test Bowler', matches: 36, innings: 69, primaryLabel: 'Rating', primaryVal: 870, eco: '2.74', avg: '20.6' },
+        { name: 'Rohit Sharma', team: 'IND (ODI)', img: 'HITMAN-removebg-preview.png', rank: '#2 ODI Batter', matches: 265, innings: 257, primaryLabel: 'Rating', primaryVal: 765, sr: '92.4', avg: '49.1' },
+        { name: 'Ravindra Jadeja', team: 'IND (Test AR)', img: 'jc.jpg', rank: '#1 Test All-Rounder', matches: 72, innings: 105, primaryLabel: 'Rating', primaryVal: 444, eco: '2.48', avg: '24.1' },
+        { name: 'Shubman Gill', team: 'IND (ODI)', img: 'PRINCE1-removebg-preview.png', rank: '#3 ODI Batter', matches: 47, innings: 47, primaryLabel: 'Rating', primaryVal: 763, sr: '101.7', avg: '58.2' }
+      ]
+    };
+
+    function renderCategoryList(catKey) {
+      var container = document.getElementById('statsContainer');
+      var list = dataset[catKey];
+      var html = '';
+
+      list.forEach(function(p) {
+        var highlightClass = p.customValClass || '';
+
+        html += '<div class="player-row-unit">' +
+          /* Left Image Box */
+          '<div class="unit-image-box">' +
+            '<img src="' + p.img + '" alt="' + p.name + '" onerror="this.src=\'https://via.placeholder.com/280x260?text=Player+Image\'">' +
+            '<span class="unit-rank-badge">' + p.rank + '</span>' +
+          '</div>' +
+
+          /* Right Stats Box */
+          '<div class="unit-stats-box">' +
+            '<div class="player-header-info">' +
+              '<div>' +
+                '<h3 class="player-title-name">' + p.name + '</h3>' +
+                '<div class="player-title-team">' + p.team + '</div>' +
+              '</div>' +
+            '</div>' +
+
+            /* Grid Metrics inside Box */
+            '<div class="individual-stats-grid">' +
+              '<div class="stat-metric-card">' +
+                '<div class="metric-label">' + p.primaryLabel + '</div>' +
+                '<div class="metric-value ' + highlightClass + '">' + p.primaryVal + '</div>' +
+              '</div>' +
+
+              '<div class="stat-metric-card">' +
+                '<div class="metric-label">Matches</div>' +
+                '<div class="metric-value">' + p.matches + '</div>' +
+              '</div>' +
+
+              '<div class="stat-metric-card">' +
+                '<div class="metric-label">Innings</div>' +
+                '<div class="metric-value">' + p.innings + '</div>' +
+              '</div>' +
+
+              (p.sr ? 
+                '<div class="stat-metric-card"><div class="metric-label">Strike Rate</div><div class="metric-value">' + p.sr + '</div></div>' : '') +
+              (p.eco ? 
+                '<div class="stat-metric-card"><div class="metric-label">Economy</div><div class="metric-value">' + p.eco + '</div></div>' : '') +
+              (p.avg ? 
+                '<div class="stat-metric-card"><div class="metric-label">Average</div><div class="metric-value">' + p.avg + '</div></div>' : '') +
+              (p.runs && p.primaryLabel !== 'Runs' ? 
+                '<div class="stat-metric-card"><div class="metric-label">Total Runs</div><div class="metric-value">' + p.runs + '</div></div>' : '') +
+              (p.fifties && p.primaryLabel !== "50's" ? 
+                '<div class="stat-metric-card"><div class="metric-label">50s</div><div class="metric-value">' + p.fifties + '</div></div>' : '') +
+            '</div>' +
+
+          '</div>' +
+        '</div>';
+      });
+
+      container.innerHTML = html;
+    }
+
+    function switchCategory(catKey, btn) {
+      var tabs = document.querySelectorAll('.clean-tab');
+      tabs.forEach(t => t.classList.remove('active'));
+      btn.classList.add('active');
+
+      renderCategoryList(catKey);
+    }
+
+    // Default Load
+    renderCategoryList('orangecap');
+
+    /* ── Mobile Menu Toggle ── */
+    var menuBtn = document.getElementById('menuBtn');
+    var mobMenu = document.getElementById('mobMenu');
+    var mobClose = document.getElementById('mobClose');
+    var nav = document.getElementById('mainNav');
+
+    window.addEventListener('scroll', function() {
+      if (window.scrollY > 80) nav.classList.add('scrolled');
+      else nav.classList.remove('scrolled');
+    });
+
+    menuBtn.addEventListener('click', function() { mobMenu.classList.add('open'); });
+    mobClose.addEventListener('click', function() { mobMenu.classList.remove('open'); });
+  </script>
+</body>
+</html>

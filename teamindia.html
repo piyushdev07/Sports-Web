@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Team India - ELITE Sports</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background: #000;
+      color: #fff;
+      overflow-x: hidden;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #000; }
+    ::-webkit-scrollbar-thumb { background: rgba(255, 140, 0, 0.5); border-radius: 3px; }
+
+    @keyframes fadeInUp {
+      0% { opacity: 0; transform: translateY(30px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes slideIn {
+      0% { opacity: 0; transform: translateX(60px); }
+      100% { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes scaleIn {
+      0% { opacity: 0; transform: scale(0.9); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+
+    .anim-up {
+      animation: fadeInUp 0.6s ease-out forwards;
+    }
+
+    .anim-slide {
+      animation: slideIn 0.5s ease-out forwards;
+    }
+
+    .anim-scale {
+      animation: scaleIn 0.3s ease-out forwards;
+    }
+
+    /* ── Default Background Video ── */
+    .bg-default {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      overflow: hidden;
+      opacity: 1;
+      transition: opacity 0.8s ease;
+    }
+
+    .bg-default.hidden-bg {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .bg-default video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .bg-default-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      background: linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0.3) 0%,
+        rgba(0, 0, 0, 0.5) 40%,
+        rgba(0, 0, 0, 0.85) 100%
+      );
+      pointer-events: none;
+      transition: opacity 0.8s ease;
+    }
+
+    .bg-default-overlay.hidden-bg {
+      opacity: 0;
+    }
+
+    /* ── Team Background Videos ── */
+    .bg-video {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      overflow: hidden;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.8s ease;
+    }
+
+    .bg-video video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .bg-video audio {
+      display: none;
+    }
+
+    .bg-video.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .page-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── Nav ── */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 50;
+      height: 64px;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: transparent;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .nav-logo-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #34d399, #059669);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .nav-logo-icon svg {
+      color: #000;
+      width: 22px;
+      height: 22px;
+    }
+
+    .nav-logo-text {
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .nav-logo-text span {
+      color: #34d399;
+    }
+
+    .nav-links {
+      display: none;
+      gap: 4px;
+    }
+
+    @media (min-width: 1024px) {
+      .nav-links {
+        display: flex;
+      }
+    }
+
+    .nav-link {
+      padding: 8px 16px;
+      font-size: 14px;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.7);
+      border-radius: 9999px;
+      transition: color 0.2s, background 0.2s;
+    }
+
+    .nav-link:hover {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .nav-link.active {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .nav-icon {
+      width: 40px;
+      height: 40px;
+      border: none;
+      background: none;
+      color: rgba(255, 255, 255, 0.7);
+      border-radius: 9999px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      transition: color 0.2s, background 0.2s;
+    }
+
+    .nav-icon:hover {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .nav-icon svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .nav-dot {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 7px;
+      height: 7px;
+      background: #ef4444;
+      border-radius: 50%;
+    }
+
+    .nav-subscribe {
+      display: none;
+      padding: 10px 20px;
+      background: linear-gradient(to right, #10b981, #34d399);
+      color: #000;
+      font-size: 14px;
+      font-weight: 600;
+      border: none;
+      border-radius: 9999px;
+      cursor: pointer;
+    }
+
+    @media (min-width: 768px) {
+      .nav-subscribe {
+        display: block;
+      }
+    }
+
+    .nav-menu-btn {
+      display: flex;
+      width: 40px;
+      height: 40px;
+      border: none;
+      background: none;
+      color: rgba(255, 255, 255, 0.7);
+      border-radius: 9999px;
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+    }
+
+    @media (min-width: 1024px) {
+      .nav-menu-btn {
+        display: none;
+      }
+    }
+
+    /* ── Mobile Menu ── */
+    .mobile-menu {
+      position: fixed;
+      inset: 0;
+      z-index: 40;
+      background: rgba(0, 0, 0, 0.95);
+      backdrop-filter: blur(24px);
+      padding-top: 80px;
+      padding-left: 24px;
+      display: none;
+    }
+
+    .mobile-menu.open {
+      display: block;
+    }
+
+    .mobile-menu-link {
+      display: block;
+      padding: 16px;
+      font-size: 18px;
+      font-weight: 500;
+      color: #a3a3a3;
+      border-radius: 12px;
+      transition: color 0.2s, background 0.2s;
+    }
+
+    .mobile-menu-link:hover {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .mobile-menu-close {
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      width: 40px;
+      height: 40px;
+      border: none;
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      border-radius: 9999px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ── Hero ── */
+    .hero {
+      padding: 120px 24px 40px;
+      text-align: center;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 16px;
+      background: rgba(255, 140, 0, 0.1);
+      border: 1px solid rgba(255, 140, 0, 0.2);
+      border-radius: 9999px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #fb923c;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 16px;
+    }
+
+    .hero-title {
+      font-size: 36px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+      background: linear-gradient(to right, #ff8c00, #fbbf24);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    @media (min-width: 768px) {
+      .hero-title {
+        font-size: 56px;
+      }
+    }
+
+    .hero-sub {
+      font-size: 16px;
+      color: #737373;
+    }
+
+    /* ── Container ── */
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ── Team Grid ── */
+    .team-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+      padding-bottom: 80px;
+    }
+
+    @media (min-width: 640px) {
+      .team-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    /* ── Team Card — FULL IMAGE, NO EFFECTS ── */
+    .team-card {
+      position: relative;
+      height: 420px;
+      border-radius: 16px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.4s ease;
+      background: none;
+      backdrop-filter: none;
+      border: none;
+    }
+
+    .team-card:hover {
+      transform: translateY(-4px);
+    }
+
+    .team-card-bg {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      filter: none;
+      transition: transform 0.5s ease;
+    }
+
+    .team-card:hover .team-card-bg {
+      transform: scale(1.03);
+    }
+
+    .team-card-gradient {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.15) 25%, transparent 50%);
+    }
+
+    .team-card-info {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 28px;
+      border-left: 4px solid transparent;
+    }
+
+    .team-card-name {
+      font-size: 20px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 4px;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.6);
+    }
+
+    .team-card-short {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.6);
+    }
+
+    .team-card-count {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      padding: 6px 14px;
+      background: rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(6px);
+      border: none;
+      border-radius: 9999px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .team-card[data-team="t20"] .team-card-info {
+      border-left-color: #ff8c00;
+    }
+    .team-card[data-team="t20"] .team-card-short {
+      color: #ff8c00;
+    }
+
+    .team-card[data-team="odi"] .team-card-info {
+      border-left-color: #1e90ff;
+    }
+    .team-card[data-team="odi"] .team-card-short {
+      color: #1e90ff;
+    }
+
+    .team-card[data-team="test"] .team-card-info {
+      border-left-color: #dc143c;
+    }
+    .team-card[data-team="test"] .team-card-short {
+      color: #dc143c;
+    }
+
+    .team-card[data-team="u19"] .team-card-info {
+      border-left-color: #32cd32;
+    }
+    .team-card[data-team="u19"] .team-card-short {
+      color: #32cd32;
+    }
+
+    /* ── Team View ── */
+    .team-view {
+      display: none;
+      padding-bottom: 80px;
+    }
+
+    .team-view.show {
+      display: block;
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: #a3a3a3;
+      font-size: 14px;
+      font-weight: 500;
+      border-radius: 9999px;
+      cursor: pointer;
+      margin-bottom: 32px;
+      transition: color 0.2s, background 0.2s;
+    }
+
+    .back-btn:hover {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .back-btn svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .team-header-title {
+      font-size: 36px;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+
+    @media (min-width: 768px) {
+      .team-header-title {
+        font-size: 48px;
+      }
+    }
+
+    .team-header-sub {
+      font-size: 14px;
+      color: #737373;
+      margin-bottom: 40px;
+    }
+
+    .team-header-title.color-t20 {
+      color: #ff8c00;
+    }
+    .team-header-title.color-odi {
+      color: #1e90ff;
+    }
+    .team-header-title.color-test {
+      color: #dc143c;
+    }
+    .team-header-title.color-u19 {
+      color: #32cd32;
+    }
+
+    /* ── Player Grid ── */
+    .player-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    @media (min-width: 640px) {
+      .player-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (min-width: 768px) {
+      .player-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .player-grid {
+        grid-template-columns: repeat(5, 1fr);
+      }
+    }
+
+    .player-card {
+      position: relative;
+      border-radius: 16px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .player-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 16px 32px rgba(0, 0, 0, 0.4);
+    }
+
+    .player-card img {
+      width: 100%;
+      aspect-ratio: 3 / 4;
+      object-fit: cover;
+      display: block;
+    }
+
+    .player-card-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.85), transparent 60%);
+      pointer-events: none;
+    }
+
+    .player-card-info {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 12px;
+    }
+
+    .player-role {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #a3a3a3;
+    }
+
+    .player-name {
+      font-size: 14px;
+      font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .player-captain {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      padding: 3px 8px;
+      font-size: 11px;
+      font-weight: 700;
+      background: #fbbf24;
+      color: #000;
+      border-radius: 6px;
+    }
+
+    .player-vice {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      padding: 3px 8px;
+      font-size: 11px;
+      font-weight: 700;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(8px);
+      color: #fff;
+      border-radius: 6px;
+    }
+
+    /* ── Modal ── */
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: rgba(0, 0, 0, 0.95);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .modal.show {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal img {
+      max-width: 90vw;
+      max-height: 90vh;
+      object-fit: contain;
+      border-radius: 16px;
+    }
+
+    .modal-close {
+      position: fixed;
+      top: 24px;
+      right: 24px;
+      z-index: 110;
+      width: 48px;
+      height: 48px;
+      border: none;
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      border-radius: 9999px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+
+    .modal-close:hover {
+      background: #ef4444;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+    .logo{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    text-decoration:none;
+    color:white;
+    font-size:24px;
+    font-weight:bold;
+}
+
+.logo img{
+    width:55px;
+    height:55px;
+    border-radius:50%;
+    object-fit:cover;
+}
+  </style>
+</head>
+<body>
+
+  <!-- Default Background Video -->
+  <div class="bg-default" id="bgDefault">
+    <video muted loop playsinline autoplay>
+      <source src="t20india.mp4" type="video/mp4">
+    </video>
+  </div>
+  <div class="bg-default-overlay" id="bgDefaultOverlay"></div>
+
+  <!-- Team-specific Background Videos + Audio -->
+  <div id="vid-t20" class="bg-video">
+    <video muted loop playsinline><source src="wwc2026.mp4" type="video/mp4"></video>
+    <audio loop preload="auto"><source src="chakde.mp3" type="audio/mpeg"></audio>
+  </div>
+  <div id="vid-odi" class="bg-video">
+    <video muted loop playsinline><source src="2011.mp4" type="video/mp4"></video>
+    <audio loop preload="auto"><source src="lehrado.mp3" type="audio/mpeg"></audio>
+  </div>
+  <div id="vid-test" class="bg-video">
+    <video muted loop playsinline><source src="india-test-video.mp4" type="video/mp4"></video>
+    <audio loop preload="auto"><source src="jeetega.mp4.mpeg" type="audio/mpeg"></audio>
+  </div>
+  <div id="vid-u19" class="bg-video">
+    <video muted loop playsinline><source src="india-u19-video.mp4" type="video/mp4"></video>
+    <audio loop preload="auto"><source src="india-u19-audio.mp3" type="audio/mpeg"></audio>
+  </div>
+
+  <div class="page-content">
+
+    <!-- Nav -->
+    <nav class="nav">
+      <a href="Index.html" class="logo">
+        <img src="okb.png" alt="Elite Sports Logo">
+      </a>
+      <div class="nav-links">
+        
+      </div>
+      <div class="nav-right">
+        <button class="nav-icon">
+          
+        </button>
+        <button class="nav-icon">
+         
+        </button>
+        <button class="nav-menu-btn" id="menuOpen">
+         
+        </button>
+      </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+      <button class="mobile-menu-close" id="menuClose">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" x2="6" y1="6" y2="18"/><line x1="6" x2="18" y1="6" y2="18"/></svg>
+      </button>
+      <a href="Index.html" class="mobile-menu-link">Home</a>
+      <a href="News12.html" class="mobile-menu-link">News</a>
+      <a href="Scores.html" class="mobile-menu-link">Live Scores</a>
+      <a href="Schedule.html" class="mobile-menu-link">Schedule</a>
+      <a href="teams.html" class="mobile-menu-link">IPL Teams</a>
+      <a href="#" class="mobile-menu-link">India</a>
+      <a href="COACHESOFALL.HTML" class="mobile-menu-link">Coaches</a>
+      <a href="Shop.html" class="mobile-menu-link">Shop</a>
+    </div>
+
+    <!-- Hero -->
+    <section class="hero">
+      <div class="hero-badge">🇮🇳 BCCI</div>
+      <h1 class="hero-title">Team India</h1>
+      <p class="hero-sub">Select a format to view full squad</p>
+    </section>
+
+    <!-- Team Grid -->
+    <div class="container">
+      <div class="team-grid" id="teamsGrid"></div>
+    </div>
+
+    <!-- Team Players View -->
+    <div class="container">
+      <div class="team-view" id="teamView">
+        <button class="back-btn" id="backBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+          Back to Formats
+        </button>
+        <div id="teamHeader"></div>
+        <div class="player-grid" id="playersGrid"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Modal -->
+  <div class="modal" id="playerModal">
+    <button class="modal-close" id="modalClose">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" x2="6" y1="6" y2="18"/><line x1="6" x2="18" y1="6" y2="18"/></svg>
+    </button>
+    <img id="modalImg" src="" alt="Player" class="anim-scale">
+  </div>
+
+  <script>
+    var teams = [
+      {
+        id: 't20',
+        name: 'India T20I',
+        short: 'T20I',
+        colorClass: 'color-t20',
+        img: 't10.png',
+        players: [
+          { name: 'Suryakumar Yadev', role: 'Batsman', c: true, img: 's1.jpg' },
+          { name: 'Ishan Kishan', role: 'Batsman', c: false, img: 'i1.jpg' },
+          { name: 'Tilak Verma', role: 'Batsman', vc: true, img: 't1.jpg' },
+          { name: 'Abhishek Sharma', role: 'Batsman', c: false, img: 'abhi1.jpg' },
+          { name: 'Sanju Samson', role: 'WK-Batsman', c: false, img: 'sanju1.jpg' },
+          { name: 'Hardik Pandya', role: 'All-Rounder', c: false, img: 'h1.jpg' },
+          { name: 'Shivam Dube', role: 'All-Rounder', c: false, img: 'd1.jpg' },
+          { name: 'Axar Patel', role: 'All-Rounder', c: false, img: 'a1.jpg' },
+          { name: 'Kuldeep Yadav', role: 'Bowler', c: false, img: 'k1.jpg' },
+          { name: 'Rinku Singh', role: 'Bowler', c: false, img: 'r1.jpg' },
+          { name: 'Wasington Sundar', role: 'Bowler', c: false, img: 'w1.jpg' },
+          { name: 'Jasprit Bumrah', role: 'Bowler', c: false, img: 'j1.jpg' },
+          { name: 'Arshdeep Singh', role: 'Bowler', c: false, img: 'arsh1.jpg' },
+          { name: 'Mohammed Siraj', role: 'Bowler', c: false, img: 'siraj1.jpg' }
+        ]
+      },
+      {
+        id: 'odi',
+        name: 'India ODI',
+        short: 'ODI',
+        colorClass: 'color-odi',
+        img: 'champions.png',
+        players: [
+          { name: 'Shubman Gill', role: 'Batsman', c: true, img: 'sc.jpg' },
+          { name: 'Rohit Sharma', role: 'Batsman', vc: true, img: 'rc1.jpg' },
+          { name: 'Virat Kohli', role: 'Batsman', c: false, img: 'vc1.jpg' },
+          { name: 'Shreyas Iyer', role: 'Batsman', c: false, img: 'ic.jpg' },
+          { name: 'KL Rahul', role: 'WK-Batsman', c: false, img: 'klc.jpg' },
+          { name: 'Rishabh Pant', role: 'WK-Batsman', c: false, img: 'pc.jpg' },
+          { name: 'Hardik Pandya', role: 'All-Rounder', c: false, img: 'hc.jpg' },
+          { name: 'Ravindra Jadeja', role: 'All-Rounder', c: false, img: 'jc.jpg' },
+          { name: 'Axar Patel', role: 'All-Rounder', c: false, img: 'ac.jpg' },
+          { name: 'Harshit Rana', role: 'All-Rounder', c: false, img: 'ranac.jpg' },
+          { name: 'Kuldeep Yadav', role: 'Bowler', c: false, img: 'kc1.png' },
+          { name: 'Varun Chakravathy', role: 'Bowler', c: false, img: 'varunc.jpg' },
+          { name: 'Waington Sundar', role: 'Bowler', c: false, img: 'wc.jpg' },
+          { name: 'Mohammed Shami', role: 'Bowler', c: false, img: 'shamic.jpg' }
+        ]
+      },
+      {
+        id: 'test',
+        name: 'India Test',
+        short: 'TEST',
+        colorClass: 'color-test',
+        img: 'test.png',
+        players: [
+          { name: 'Shubman Gill', role: 'Batsman', c: true, img: 'o1.png' },
+          { name: 'Rishabh Pant', role: 'Batsman', vc: true, img: 'o2.png' },
+          { name: 'Yashasvi Jaiswal', role: 'Batsman', c: false, img: 'jaiswal-india.png' },
+          { name: 'Sai Sudarshan', role: 'Batsman', c: false, img: 'virat-india.png' },
+          { name: 'KL Rahul', role: 'Batsman', c: false, img: 'kl-india.png' },
+          { name: 'Wasington Sundar', role: 'WK-Batsman', c: false, img: 'pant-india.png' },
+          { name: 'Sarfaraz Khan', role: 'Batsman', c: false, img: 'sarfaraz-india.png' },
+          { name: 'Dhruv Jurel', role: 'WK-Batsman', c: false, img: 'dhruv-india.png' },
+          { name: 'Ravindra Jadeja', role: 'All-Rounder', c: false, img: 'jadeja-india.png' },
+          { name: 'Ravichandran Ashwin', role: 'Bowler', c: false, img: 'ashwin-india.png' },
+          { name: 'Axar Patel', role: 'All-Rounder', c: false, img: 'axar-india.png' },
+          { name: 'Kuldeep Yadav', role: 'Bowler', c: false, img: 'kuldeep-india.png' },
+          { name: 'Jasprit Bumrah', role: 'Bowler', c: false, img: 'bumrah-india.png' },
+          { name: 'Mohammed Shami', role: 'Bowler', c: false, img: 'shami-india.png' },
+          { name: 'Mohammed Siraj', role: 'Bowler', c: false, img: 'siraj-india.png' },
+          { name: 'Shardul Thakur', role: 'All-Rounder', c: false, img: 'shardul-india.png' }
+        ]
+      },
+      {
+        id: 'u19',
+        name: 'India U19',
+        short: 'U19',
+        colorClass: 'color-u19',
+        img: '2026u19.png',
+        players: [
+          { name: 'Ayush Mhatre', role: 'Batsman', c: true, img: 'nikhil-u19.png' },
+          { name: 'Nikhil Kumar', role: 'Batsman', c: false, img: 'ayush-u19.png' },
+          { name: 'Vaibhav Suryavanshi', role: 'Batsman', c: false, img: 'vaibhav-u19.png' },
+          { name: 'Andre Siddharth', role: 'Batsman', c: false, img: 'andre-u19.png' },
+          { name: 'Karan Sharma', role: 'WK-Batsman', c: false, img: 'karan-u19.png' },
+          { name: 'C Rahul', role: 'WK-Batsman', c: false, img: 'rahul-u19.png' },
+          { name: 'Hardik Raj', role: 'All-Rounder', c: false, img: 'hardik-u19.png' },
+          { name: 'Pranav Dhanawade', role: 'All-Rounder', c: false, img: 'pranav-u19.png' },
+          { name: 'Yudhveer Singh', role: 'All-Rounder', c: false, img: 'yudhveer-u19.png' },
+          { name: 'Kwena Mafaka', role: 'Bowler', c: false, img: 'kwena-u19.png' },
+          { name: 'Chandra Sai', role: 'Bowler', c: false, img: 'chandra-u19.png' },
+          { name: 'Vihaan Malhotra', role: 'Bowler', c: false, img: 'vihaan-u19.png' },
+          { name: 'Raj Limbani', role: 'Bowler', c: false, img: 'raj-u19.png' },
+          { name: 'Aarav Shekhawat', role: 'Bowler', c: false, img: 'aarav-u19.png' },
+          { name: 'Shourya Gupta', role: 'Bowler', c: false, img: 'shourya-u19.png' }
+        ]
+      }
+    ];
+
+    function buildGrid() {
+      var grid = document.getElementById('teamsGrid');
+      grid.innerHTML = '';
+
+      teams.forEach(function(t, i) {
+        var card = document.createElement('div');
+        card.className = 'team-card anim-up';
+        card.setAttribute('data-team', t.id);
+        card.style.animationDelay = (i * 0.08) + 's';
+
+        card.innerHTML =
+          '<div class="team-card-bg" style="background-image:url(' + t.img + ')"></div>' +
+          '<div class="team-card-gradient"></div>' +
+          '<div class="team-card-count">' + t.players.length + ' Players</div>' +
+          '<div class="team-card-info">' +
+            '<h3 class="team-card-name">' + t.name + '</h3>' +
+            '<p class="team-card-short">' + t.short + '</p>' +
+          '</div>';
+
+        card.addEventListener('click', function() {
+          showTeam(t);
+        });
+
+        grid.appendChild(card);
+      });
+    }
+
+    function showTeam(team) {
+      document.getElementById('teamsGrid').style.display = 'none';
+      var view = document.getElementById('teamView');
+      view.className = 'team-view show anim-slide';
+
+      switchMedia(team.id);
+
+      document.getElementById('teamHeader').innerHTML =
+        '<h2 class="team-header-title ' + team.colorClass + '">' + team.name + '</h2>' +
+        '<p class="team-header-sub">Squad 2025 &bull; ' + team.players.length + ' Players</p>';
+
+      var grid = document.getElementById('playersGrid');
+      grid.innerHTML = '';
+
+      team.players.forEach(function(p, i) {
+        var card = document.createElement('div');
+        card.className = 'player-card anim-up';
+        card.style.animationDelay = (i * 0.03) + 's';
+
+        var badge = '';
+        if (p.c) {
+          badge = '<div class="player-captain">C</div>';
+        } else if (p.vc) {
+          badge = '<div class="player-vice">VC</div>';
+        }
+
+        card.innerHTML =
+          '<img src="' + p.img + '" alt="' + p.name + '">' +
+          '<div class="player-card-overlay"></div>' +
+          '<div class="player-card-info">' +
+            '<p class="player-role">' + p.role + '</p>' +
+            '<h3 class="player-name">' + p.name + '</h3>' +
+          '</div>' +
+          badge;
+
+        card.addEventListener('click', function() {
+          openModal(p.img);
+        });
+
+        grid.appendChild(card);
+      });
+    }
+
+    function switchMedia(teamId) {
+      var bgDefault = document.getElementById('bgDefault');
+      var bgOverlay = document.getElementById('bgDefaultOverlay');
+      bgDefault.classList.add('hidden-bg');
+      bgOverlay.classList.add('hidden-bg');
+
+      var allVids = document.querySelectorAll('.bg-video');
+      for (var i = 0; i < allVids.length; i++) {
+        var v = allVids[i].querySelector('video');
+        var a = allVids[i].querySelector('audio');
+        if (v) v.pause();
+        if (a) { a.pause(); a.currentTime = 0; }
+        allVids[i].classList.remove('active');
+      }
+
+      var target = document.getElementById('vid-' + teamId);
+      if (target) {
+        target.classList.add('active');
+        var vid = target.querySelector('video');
+        var aud = target.querySelector('audio');
+        if (vid) vid.play();
+        if (aud) {
+          aud.volume = 0.15;
+          aud.play();
+        }
+      }
+    }
+
+    function goBack() {
+      var allVids = document.querySelectorAll('.bg-video');
+      for (var i = 0; i < allVids.length; i++) {
+        var v = allVids[i].querySelector('video');
+        var a = allVids[i].querySelector('audio');
+        if (v) v.pause();
+        if (a) { a.pause(); a.currentTime = 0; }
+        allVids[i].classList.remove('active');
+      }
+
+      var bgDefault = document.getElementById('bgDefault');
+      var bgOverlay = document.getElementById('bgDefaultOverlay');
+      bgDefault.classList.remove('hidden-bg');
+      bgOverlay.classList.remove('hidden-bg');
+      var defaultVid = bgDefault.querySelector('video');
+      if (defaultVid) defaultVid.play();
+
+      document.getElementById('teamView').className = 'team-view';
+      document.getElementById('teamsGrid').style.display = '';
+    }
+
+    function openModal(src) {
+      document.getElementById('modalImg').src = src;
+      document.getElementById('playerModal').classList.add('show');
+    }
+
+    function closeModal() {
+      document.getElementById('playerModal').classList.remove('show');
+    }
+
+    document.getElementById('backBtn').addEventListener('click', goBack);
+
+    document.getElementById('playerModal').addEventListener('click', function(e) {
+      if (e.target === this) closeModal();
+    });
+
+    document.getElementById('modalClose').addEventListener('click', closeModal);
+
+    document.getElementById('menuOpen').addEventListener('click', function() {
+      document.getElementById('mobileMenu').classList.add('open');
+    });
+
+    document.getElementById('menuClose').addEventListener('click', function() {
+      document.getElementById('mobileMenu').classList.remove('open');
+    });
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeModal();
+    });
+
+    buildGrid();
+  </script>
+</body>
+</html>

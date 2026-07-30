@@ -1,0 +1,1786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IPL Teams 2026 - ELITE Sports</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background: #0a0a0a;
+      color: #fff;
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    ul {
+      list-style: none;
+    }
+
+    img {
+      display: block;
+    }
+
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #0a0a0a;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #10b981;
+      border-radius: 3px;
+    }
+
+    /* ── Background Video (BRIGHTER & SHARPER) ── */
+    .bg-video {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      overflow: hidden;
+      transition: opacity 0.8s ease;
+    }
+
+    .bg-video video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: contrast(1.2) brightness(1.2) saturate(1.1);
+    }
+
+    .bg-video::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(10, 10, 10, 0.3);
+    }
+
+    .bg-video audio {
+      display: none;
+    }
+
+    .page-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── Glass ── */
+    .glass {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    /* ── Gradient Text ── */
+    .gradient-text {
+      background: linear-gradient(135deg, #fff, #10b981);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* ── Animations ── */
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeInUp {
+      0% { opacity: 0; transform: translateY(30px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes slideIn {
+      0% { opacity: 0; transform: translateX(60px); }
+      100% { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes scaleIn {
+      0% { opacity: 0; transform: scale(0.9); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+
+    .anim-blink {
+      animation: blink 1.5s infinite;
+    }
+
+    .anim-bounce {
+      animation: bounce 1.5s ease-in-out infinite;
+    }
+
+    .fade-in {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .anim-up {
+      animation: fadeInUp 0.6s ease-out forwards;
+    }
+
+    .anim-slide {
+      animation: slideIn 0.5s ease-out forwards;
+    }
+
+    .anim-scale {
+      animation: scaleIn 0.3s ease-out forwards;
+    }
+
+    /* ══════════════════════════════════════════ */
+    /* ── Navigation (EXACT COPY FROM FIRST PAGE) ── */
+    /* ══════════════════════════════════════════ */
+   .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 50;
+      height: 64px;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: transparent;
+      border-bottom: none;
+      transition: background 0.4s ease, border-color 0.4s ease;
+    }
+
+    .nav.scrolled {
+      background: rgba(10, 10, 10, 0.85);
+      backdrop-filter: blur(24px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+    }
+
+    .nav-links {
+      display: none;
+      gap: 8px;
+    }
+
+    .nav-link {
+      padding: 8px 16px;
+      font-size: 14px;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.7);
+      border-radius: 9999px;
+      transition: color 0.2s, background 0.2s;
+    }
+
+    .nav-link:hover {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .nav-link.active {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .nav-icon-btn {
+      position: relative;
+      width: 40px;
+      height: 40px;
+      border: none;
+      background: none;
+      color: rgba(255, 255, 255, 0.7);
+      border-radius: 9999px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: color 0.2s, background 0.2s;
+    }
+
+    .nav-icon-btn:hover {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .nav-badge {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 8px;
+      height: 8px;
+      background: #ef4444;
+      border-radius: 50%;
+    }
+
+    .nav-btn {
+      padding: 8px 18px;
+      font-size: 13px;
+      font-weight: 600;
+      border: none;
+      border-radius: 9999px;
+      cursor: pointer;
+      transition: box-shadow 0.3s, background 0.3s;
+      white-space: nowrap;
+    }
+
+    .nav-login {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+    }
+
+    .nav-login:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .nav-signup {
+      background: linear-gradient(to right, #10b981, #34d399);
+      color: #000;
+    }
+
+    .nav-signup:hover {
+      box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4);
+    }
+
+    .nav-menu-btn {
+      display: none;
+      width: 40px;
+      height: 40px;
+      border: none;
+      background: none;
+      color: rgba(255, 255, 255, 0.7);
+      border-radius: 9999px;
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+      transition: color 0.2s;
+    }
+
+    .nav-menu-btn:hover {
+      color: #fff;
+    }
+
+    @media (min-width: 1024px) {
+      .nav-links {
+        display: flex;
+      }
+      .nav-login {
+        display: block;
+      }
+    }
+
+    @media (max-width: 1023px) {
+      .nav-menu-btn {
+        display: flex;
+      }
+      .nav-login {
+        display: none;
+      }
+    }
+
+    @media (max-width: 767px) {
+      .nav-signup {
+        display: none;
+      }
+    }
+
+    /* ── Mobile Menu ── */
+    .mob-menu {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 60;
+      background: rgba(10, 10, 10, 0.95);
+      backdrop-filter: blur(24px);
+      padding: 80px 24px 24px;
+      display: none;
+      flex-direction: column;
+    }
+
+    .mob-menu.open {
+      display: flex;
+    }
+
+    .mob-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 40px;
+      height: 40px;
+      border: none;
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      border-radius: 9999px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .mob-link {
+      padding: 16px;
+      font-size: 18px;
+      font-weight: 500;
+      color: #a3a3a3;
+      border-radius: 12px;
+      transition: 0.2s;
+    }
+
+    .mob-link:hover {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .mob-link.on {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .mob-btns {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .mob-btns .nav-btn {
+      flex: 1;
+      text-align: center;
+      padding: 14px;
+      font-size: 15px;
+    }
+
+    /* ── Search Bar ── */
+    .search-bar {
+      position: fixed;
+      top: 64px;
+      left: 0;
+      width: 100%;
+      z-index: 45;
+      padding: 16px 24px;
+      background: rgba(10, 10, 10, 0.95);
+      backdrop-filter: blur(24px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      display: none;
+    }
+
+    .search-bar.open {
+      display: block;
+    }
+
+    .search-inner {
+      max-width: 600px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 14px 20px 14px 48px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 9999px;
+      color: #fff;
+      font-size: 15px;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+
+    .search-input::placeholder {
+      color: #737373;
+    }
+
+    .search-input:focus {
+      border-color: rgba(16, 185, 129, 0.5);
+    }
+
+    .search-icon-left {
+      position: absolute;
+      top: 50%;
+      left: 18px;
+      transform: translateY(-50%);
+      color: #737373;
+    }
+
+    .search-results {
+      margin-top: 12px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      overflow: hidden;
+      display: none;
+    }
+
+    .search-results.show {
+      display: block;
+    }
+
+    .search-result-item {
+      padding: 14px 20px;
+      font-size: 14px;
+      color: #d4d4d4;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .search-result-item:last-child {
+      border-bottom: none;
+    }
+
+    .search-result-item:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+    }
+
+    .search-no-result {
+      padding: 20px;
+      text-align: center;
+      color: #737373;
+      font-size: 14px;
+    }
+
+    /* ── Notification Popup (EXACT COPY) ── */
+    .notif-popup {
+      position: fixed;
+      top: 64px;
+      right: 24px;
+      width: 340px;
+      z-index: 55;
+      background: rgba(20, 20, 20, 0.95);
+      backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      overflow: hidden;
+      display: none;
+    }
+
+    .notif-popup.open {
+      display: block;
+    }
+
+    .notif-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .notif-header-title {
+      font-weight: 600;
+      font-size: 15px;
+    }
+
+    .notif-header-dot {
+      width: 8px;
+      height: 8px;
+      background: #ef4444;
+      border-radius: 50%;
+    }
+
+    .notif-item {
+      padding: 14px 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      transition: background 0.2s;
+      cursor: pointer;
+    }
+
+    .notif-item:last-child {
+      border-bottom: none;
+    }
+
+    .notif-item:hover {
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .notif-item-title {
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+
+    .notif-item-time {
+      font-size: 12px;
+      color: #737373;
+    }
+
+    .notif-item-dot {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      background: #34d399;
+      border-radius: 50%;
+      margin-right: 8px;
+    }
+
+    @media (max-width: 400px) {
+      .notif-popup {
+        right: 8px;
+        left: 8px;
+        width: auto;
+      }
+    }
+
+    /* ── Auth Modal (EXACT COPY) ── */
+    .auth-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 70;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(8px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .auth-overlay.open {
+      display: flex;
+    }
+
+    .auth-modal {
+      width: 100%;
+      max-width: 420px;
+      background: #141414;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 24px;
+      overflow: hidden;
+    }
+
+    .auth-tabs {
+      display: flex;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .auth-tab {
+      flex: 1;
+      padding: 16px;
+      text-align: center;
+      font-size: 15px;
+      font-weight: 600;
+      color: #737373;
+      cursor: pointer;
+      transition: color 0.2s;
+      background: none;
+      border: none;
+    }
+
+    .auth-tab.active {
+      color: #fff;
+      border-bottom: 2px solid #10b981;
+    }
+
+    .auth-tab:hover {
+      color: #d4d4d4;
+    }
+
+    .auth-body {
+      padding: 32px 24px;
+    }
+
+    .auth-field {
+      margin-bottom: 16px;
+    }
+
+    .auth-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: #a3a3a3;
+      margin-bottom: 6px;
+    }
+
+    .auth-input {
+      width: 100%;
+      padding: 14px 16px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      color: #fff;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+
+    .auth-input::placeholder {
+      color: #525252;
+    }
+
+    .auth-input:focus {
+      border-color: rgba(16, 185, 129, 0.5);
+    }
+
+    .auth-submit {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(to right, #10b981, #34d399);
+      color: #000;
+      font-size: 15px;
+      font-weight: 600;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: box-shadow 0.3s;
+      margin-top: 8px;
+    }
+
+    .auth-submit:hover {
+      box-shadow: 0 4px 20px rgba(16, 185, 129, 0.3);
+    }
+
+    .auth-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 36px;
+      height: 36px;
+      border: none;
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      border-radius: 9999px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .auth-modal-wrap {
+      position: relative;
+    }
+
+    .auth-msg {
+      text-align: center;
+      font-size: 14px;
+      margin-top: 16px;
+      display: none;
+    }
+
+    .auth-msg.show {
+      display: block;
+    }
+
+    .auth-msg.success {
+      color: #34d399;
+    }
+
+    /* ══════════════════════════════════════════ */
+    /* ── LOGO (EXACT COPY FROM FIRST PAGE) ── */
+    /* ══════════════════════════════════════════ */
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: white;
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .logo img {
+      width: 55px;
+      height: 55px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    /* ══════════════════════════════════════════ */
+    /* ── TEAMS PAGE SPECIFIC STYLES ── */
+    /* ══════════════════════════════════════════ */
+
+    /* ── Hero ── */
+    .hero {
+      padding: 120px 24px 40px;
+      text-align: center;
+    }
+
+    .hero-title {
+      font-size: 36px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+      background: linear-gradient(to right, #fb923c, #fbbf24);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    @media (min-width: 768px) {
+      .hero-title {
+        font-size: 56px;
+      }
+    }
+
+    .hero-sub {
+      font-size: 16px;
+      color: #737373;
+    }
+
+    /* ── Container ── */
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ── Team Grid ── */
+    .team-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+      padding-bottom: 80px;
+    }
+
+    @media (min-width: 640px) {
+      .team-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .team-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    .team-card {
+      position: relative;
+      height: 300px;
+      border-radius: 20px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.5s ease;
+    }
+
+    .team-card:hover {
+      transform: translateY(-6px);
+    }
+
+    .team-card-bg {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      filter: brightness(0.5);
+      transition: transform 0.6s ease, filter 0.6s ease;
+    }
+
+    .team-card:hover .team-card-bg {
+      transform: scale(1.1);
+      filter: brightness(0.7);
+    }
+
+    .team-card-gradient {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, transparent);
+    }
+
+    .team-card-info {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 24px;
+      border-left: 4px solid;
+    }
+
+    .team-card-name {
+      font-size: 18px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 4px;
+    }
+
+    .team-card-short {
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+    }
+
+    /* ── Team View ── */
+    .team-view {
+      display: none;
+      padding-bottom: 80px;
+    }
+
+    .team-view.show {
+      display: block;
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: #a3a3a3;
+      font-size: 14px;
+      font-weight: 500;
+      border-radius: 9999px;
+      cursor: pointer;
+      margin-bottom: 32px;
+      transition: color 0.2s, background 0.2s;
+    }
+
+    .back-btn:hover {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .back-btn svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .team-header-title {
+      font-size: 36px;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+
+    @media (min-width: 768px) {
+      .team-header-title {
+        font-size: 48px;
+      }
+    }
+
+    .team-header-sub {
+      font-size: 14px;
+      color: #737373;
+      margin-bottom: 40px;
+    }
+
+    /* ── Player Grid ── */
+    .player-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    @media (min-width: 640px) {
+      .player-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (min-width: 768px) {
+      .player-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .player-grid {
+        grid-template-columns: repeat(5, 1fr);
+      }
+    }
+
+    .player-card {
+      border-radius: 16px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+    }
+
+    .player-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 16px 32px rgba(0, 0, 0, 0.4);
+    }
+
+    .player-card img {
+      width: 100%;
+      aspect-ratio: 3 / 4;
+      object-fit: cover;
+      display: block;
+    }
+
+    .player-card-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, transparent);
+      pointer-events: none;
+    }
+
+    .player-card-info {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 12px;
+    }
+
+    .player-role {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #f60000;
+    }
+
+    .player-name {
+      font-size: 20px;
+      font-family: Georgia, 'Times New Roman', Times, serif;
+      font-weight: 700;
+      color: rgb(8, 8, 8);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .player-captain {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      padding: 3px 8px;
+      font-size: 11px;
+      font-weight: 700;
+      background: #fbbf24;
+      color: #000;
+      border-radius: 6px;
+    }
+
+    /* ── Modal ── */
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: rgba(0, 0, 0, 0.95);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .modal.show {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal img {
+      max-width: 90vw;
+      max-height: 90vh;
+      object-fit: contain;
+      border-radius: 16px;
+    }
+
+    .modal-close {
+      position: fixed;
+      top: 24px;
+      right: 24px;
+      z-index: 110;
+      width: 48px;
+      height: 48px;
+      border: none;
+      background: rgba(251, 248, 248, 0.1);
+      color: #fff;
+      border-radius: 9999px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+
+    .modal-close:hover {
+      background: #ef4444;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background Video -->
+  <div class="bg-video">
+    <video autoplay muted loop playsinline>
+      <source src="INDIAN PREMIER LEGUE.mp4" type="video/mp4">
+    </video>
+  </div>
+
+  <!-- Team Videos + Audio -->
+  <div id="vid-csk" class="bg-video" style="opacity:0;pointer-events:none;">
+    <video muted loop playsinline><source src="whitle.mp4" type="video/mp4"></video>
+    <audio loop preload="auto"><source src="thalapathy.mp3" type="audio/mpeg"></audio>
+  </div>
+  <div id="vid-mi" class="bg-video" style="opacity:0;pointer-events:none;">
+    <video muted loop playsinline><source src="bom.mp4" type="video/mp4"></video>
+    <audio loop preload="auto"><source src="bom1.mp3" type="audio/mpeg"></audio>
+  </div>
+  <div id="vid-rcb" class="bg-video" style="opacity:0;pointer-events:none;">
+    <video muted loop playsinline><source src="anthemrcb.mp4" type="video/mp4"></video>
+    <audio loop preload="auto"><source src="2023.mp3" type="audio/mpeg"></audio>
+  </div>
+  <div id="vid-kkr" class="bg-video" style="opacity:0;pointer-events:none;">
+    <video muted loop playsinline><source src="kkripl.mp4" type="video/mp4"></video>
+    <audio loop preload="auto"><source src="kkranthem.mp3" type="audio/mpeg"></audio>
+  </div>
+  <div id="vid-rr" class="bg-video" style="opacity:0;pointer-events:none;">
+    <video muted loop playsinline><source src="bol.mp4" type="video/mp4"></video>
+    <audio loop preload="auto"><source src="hala.mp3" type="audio/mpeg"></audio>
+  </div>
+  <div id="vid-srh" class="bg-video" style="opacity:0;pointer-events:none;">
+    <video muted loop playsinline><source src="rise.mp4" type="video/mp4"></video>
+    <audio loop preload="auto"><source src="sun (1).mp3" type="audio/mpeg"></audio>
+  </div>
+  <div id="vid-pbks" class="bg-video" style="opacity:0;pointer-events:none;">
+    <video muted loop playsinline><source src="paji.mp4" type="video/mp4"></video>
+    <audio loop preload="auto"><source src="pbksan.mp3" type="audio/mpeg"></audio>
+  </div>
+  <div id="vid-gt" class="bg-video" style="opacity:0;pointer-events:none;">
+    <video muted loop playsinline><source src="aava de.mp4" type="video/mp4"></video>
+    <audio loop preload="auto"><source src="Aapdu_Pehlu_Anthem___Aava_De(256k).mp3" type="audio/mpeg"></audio>
+  </div>
+  <div id="vid-lsg" class="bg-video" style="opacity:0;pointer-events:none;">
+    <video muted loop playsinline><source src="baari.mp4" type="video/mp4"></video>
+    <audio loop preload="auto"><source src="apani.mp3" type="audio/mpeg"></audio>
+  </div>
+  <div id="vid-dc" class="bg-video" style="opacity:0;pointer-events:none;">
+    <video muted loop playsinline><source src="roar.mp4" type="video/mp4"></video>
+    <audio loop preload="auto"><source src="dcan.mp3" type="audio/mpeg"></audio>
+  </div>
+
+  <div class="page-content">
+
+    <!-- ══════════════════════════════════════════════ -->
+    <!-- Navigation (EXACT COPY FROM FIRST PAGE) -->
+    <!-- Only change: "Teams" link has .active class -->
+    <!-- ══════════════════════════════════════════════ -->
+    <nav class="nav" id="mainNav">
+      <div class="nav-left">
+        <a href="Index.html" class="logo">
+          <img src="okb.png" alt="Elite Sports Logo">
+        </a>
+        <div class="nav-links">
+        </div>
+      </div>
+      <div class="nav-right">
+        <button class="nav-icon-btn" id="searchBtn" aria-label="Search">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        </button>
+        <button class="nav-icon-btn" id="notifBtn" aria-label="Notifications">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+          <span class="nav-badge"></span>
+        </button>
+        
+        <button class="nav-menu-btn" id="menuBtn" aria-label="Menu">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+        </button>
+      </div>
+    </nav>
+
+    <!-- Search Bar (EXACT COPY) -->
+    <div class="search-bar" id="searchBar">
+      <div class="search-inner">
+        <span class="search-icon-left">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        </span>
+        <input type="text" class="search-input" id="searchInput" placeholder="Search sports, teams, players...">
+        <div class="search-results" id="searchResults"></div>
+      </div>
+    </div>
+
+    <!-- Notification Popup (EXACT COPY) -->
+    <div class="notif-popup" id="notifPopup">
+      <div class="notif-header">
+        <span class="notif-header-title">Notifications</span>
+        <span class="notif-header-dot"></span>
+      </div>
+      <div class="notif-item">
+        <span class="notif-item-dot"></span>
+        <p class="notif-item-title">IPL 2026: SRH wins the toss</p>
+        <p class="notif-item-time">2 minutes ago</p>
+      </div>
+      <div class="notif-item">
+        <span class="notif-item-dot"></span>
+        <p class="notif-item-title">Champions League draw is out</p>
+        <p class="notif-item-time">15 minutes ago</p>
+      </div>
+      <div class="notif-item">
+        <span class="notif-item-dot"></span>
+        <p class="notif-item-title">NBA: Lakers trade confirmed</p>
+        <p class="notif-item-time">1 hour ago</p>
+      </div>
+      <div class="notif-item">
+        <p class="notif-item-title">F1: New regulations announced</p>
+        <p class="notif-item-time">3 hours ago</p>
+      </div>
+    </div>
+
+    <!-- Mobile Menu (EXACT COPY, Teams = active) -->
+    <div class="mob-menu" id="mobMenu">
+      <button class="mob-close" id="mobClose">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" x2="6" y1="6" y2="18"/><line x1="6" x2="18" y1="6" y2="18"/></svg>
+      </button>
+      <a href="Index.html" class="mob-link">Home</a>
+      <a href="News12.html" class="mob-link">News</a>
+      <a href="Scores.html" class="mob-link">Live Scores</a>
+      <a href="Schedule.html" class="mob-link">Schedule</a>
+      <a href="VIJAYBHAI.HTML" class="mob-link on">Teams</a>
+      <a href="COACHESOFALL.HTML" class="mob-link">Coaches</a>
+      <a href="Shop.html" class="mob-link">Shop</a>
+      <div class="mob-btns">
+        <button class="nav-btn nav-login" onclick="openAuth('login')">Log In</button>
+        <button class="nav-btn nav-signup" onclick="openAuth('signup')">Sign Up</button>
+      </div>
+    </div>
+
+    <!-- Auth Modal (EXACT COPY) -->
+    <div class="auth-overlay" id="authOverlay">
+      <div class="auth-modal-wrap">
+        <div class="auth-modal">
+          <button class="auth-close" id="authClose">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" x2="6" y1="6" y2="18"/><line x1="6" x2="18" y1="6" y2="18"/></svg>
+          </button>
+          <div class="auth-tabs">
+            <button class="auth-tab active" id="tabLogin" onclick="switchTab('login')">Log In</button>
+            <button class="auth-tab" id="tabSignup" onclick="switchTab('signup')">Sign Up</button>
+          </div>
+          <div class="auth-body" id="authBody">
+            <div id="loginForm">
+              <div class="auth-field">
+                <label class="auth-label">Email</label>
+                <input type="email" class="auth-input" placeholder="your@email.com" id="loginEmail">
+              </div>
+              <div class="auth-field">
+                <label class="auth-label">Password</label>
+                <input type="password" class="auth-input" placeholder="Enter password" id="loginPass">
+              </div>
+              <button class="auth-submit" onclick="handleLogin()">Log In</button>
+              <p class="auth-msg" id="loginMsg"></p>
+            </div>
+            <div id="signupForm" style="display: none;">
+              <div class="auth-field">
+                <label class="auth-label">Full Name</label>
+                <input type="text" class="auth-input" placeholder="John Doe" id="signupName">
+              </div>
+              <div class="auth-field">
+                <label class="auth-label">Email</label>
+                <input type="email" class="auth-input" placeholder="your@email.com" id="signupEmail">
+              </div>
+              <div class="auth-field">
+                <label class="auth-label">Password</label>
+                <input type="password" class="auth-input" placeholder="Create password" id="signupPass">
+              </div>
+              <button class="auth-submit" onclick="handleSignup()">Create Account</button>
+              <p class="auth-msg" id="signupMsg"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════ -->
+    <!-- TEAMS PAGE CONTENT (KEPT EXACTLY SAME) -->
+    <!-- ══════════════════════════════════════════════ -->
+
+    <!-- Hero -->
+    <section class="hero">
+      <h1 class="hero-title">IPL 2026 Teams</h1>
+      <p class="hero-sub">Select a team to view full squad</p>
+    </section>
+
+    <!-- Team Grid -->
+    <div class="container">
+      <div class="team-grid" id="teamsGrid"></div>
+    </div>
+
+    <!-- Team Players View -->
+    <div class="container">
+      <div class="team-view" id="teamView">
+        <button class="back-btn" onclick="goBack()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+          Back to Teams
+        </button>
+        <div id="teamHeader"></div>
+        <div class="player-grid" id="playersGrid"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Modal -->
+  <div class="modal" id="playerModal" onclick="closeModal()">
+    <button class="modal-close">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" x2="6" y1="6" y2="18"/><line x1="6" x2="18" y1="6" y2="18"/></svg>
+    </button>
+    <img id="modalImg" src="" alt="Player" class="anim-scale">
+  </div>
+
+  <script>
+    /* ══════════════════════════════════════════ */
+    /* NAVBAR JS (EXACT COPY FROM FIRST PAGE)   */
+    /* ══════════════════════════════════════════ */
+
+    // Nav scroll effect
+    window.addEventListener('scroll', function() {
+      var nav = document.getElementById('mainNav');
+      if (window.scrollY > 40) {
+        nav.classList.add('scrolled');
+      } else {
+        nav.classList.remove('scrolled');
+      }
+    });
+
+    // Search toggle
+    document.getElementById('searchBtn').addEventListener('click', function(e) {
+      e.stopPropagation();
+      var bar = document.getElementById('searchBar');
+      var notif = document.getElementById('notifPopup');
+      notif.classList.remove('open');
+      bar.classList.toggle('open');
+      if (bar.classList.contains('open')) {
+        document.getElementById('searchInput').focus();
+      }
+    });
+
+    // Search functionality
+    var searchData = [
+      { name: 'Chennai Super Kings', link: '#' },
+      { name: 'Mumbai Indians', link: '#' },
+      { name: 'Royal Challengers Bangalore', link: '#' },
+      { name: 'Kolkata Knight Riders', link: '#' },
+      { name: 'Rajasthan Royals', link: '#' },
+      { name: 'Sunrisers Hyderabad', link: '#' },
+      { name: 'Punjab Kings', link: '#' },
+      { name: 'Gujarat Titans', link: '#' },
+      { name: 'Lucknow Super Giants', link: '#' },
+      { name: 'Delhi Capitals', link: '#' },
+      { name: 'IPL 2026 Schedule', link: 'Schedule.html' },
+      { name: 'Live Scores', link: 'Scores.html' },
+      { name: 'Sports News', link: 'News12.html' },
+      { name: 'Shop', link: 'Shop.html' },
+      { name: 'Coaches', link: 'COACHESOFALL.HTML' }
+    ];
+
+    document.getElementById('searchInput').addEventListener('input', function() {
+      var q = this.value.toLowerCase().trim();
+      var box = document.getElementById('searchResults');
+      if (!q) {
+        box.classList.remove('show');
+        box.innerHTML = '';
+        return;
+      }
+      var matches = searchData.filter(function(item) {
+        return item.name.toLowerCase().indexOf(q) !== -1;
+      });
+      if (matches.length === 0) {
+        box.innerHTML = '<div class="search-no-result">No results found</div>';
+      } else {
+        box.innerHTML = matches.map(function(m) {
+          return '<div class="search-result-item" onclick="window.location.href=\'' + m.link + '\'">' + m.name + '</div>';
+        }).join('');
+      }
+      box.classList.add('show');
+    });
+
+    // Notification toggle
+    document.getElementById('notifBtn').addEventListener('click', function(e) {
+      e.stopPropagation();
+      var popup = document.getElementById('notifPopup');
+      var bar = document.getElementById('searchBar');
+      bar.classList.remove('open');
+      popup.classList.toggle('open');
+    });
+
+    // Close popups on outside click
+    document.addEventListener('click', function(e) {
+      var searchBar = document.getElementById('searchBar');
+      var notifPopup = document.getElementById('notifPopup');
+      if (!searchBar.contains(e.target) && e.target.id !== 'searchBtn') {
+        searchBar.classList.remove('open');
+        document.getElementById('searchResults').classList.remove('show');
+      }
+      if (!notifPopup.contains(e.target) && e.target.id !== 'notifBtn') {
+        notifPopup.classList.remove('open');
+      }
+    });
+
+    
+
+
+    /* ══════════════════════════════════════════ */
+    /* TEAMS PAGE JS (KEPT EXACTLY SAME)        */
+    /* ══════════════════════════════════════════ */
+
+    var teams = [
+      {
+        id: 'csk', name: 'Chennai Super Kings', short: 'CSK',
+        color: '#f9d02c', img: 'CSK2008.png',
+        players: [
+          { name: 'Ruturaj Gaikwad', role: 'Batsman', c: true, img: 'rutu.png' },
+          { name: 'MS Dhoni', role: 'WK-Batsman', c: false, img: 'msd.png' },
+          { name: 'Ayush Mhatre', role: 'All-Rounder', c: false, img: 'ayush.png' },
+          { name: 'Rahul Chahar', role: 'Bowler', c: false, img: 'r chahar.png' },
+          { name: 'Shivam Dube', role: 'All-Rounder', c: false, img: 'dube.png' },
+          { name: 'Prashant Veer', role: 'All-Rounder', c: false, img: 'veer.png' },
+          { name: 'Sanju Samson', role: 'WK', c: false, img: 'sanju.png' },
+          { name: 'Dewald Brevis', role: 'Batsman', c: false, img: 'brevis.png' },
+          { name: 'Kartik Sharma', role: 'WK', c: false, img: 'Kartik.png' },
+          { name: 'Matt Henry', role: 'Bowler', c: false, img: 'matt.png' },
+          { name: 'Urvil Patel', role: 'WK', c: false, img: 'urvil.png' },
+          { name: 'Sarfaraj Khan', role: 'Batsman', c: false, img: 'Sarfaraj.png' },
+          { name: 'Matthew Shorts', role: 'All-Rounder', c: false, img: 'short.png' },
+          { name: 'Zak Foulkes', role: 'Bowler', c: false, img: 'zak.png' },
+          { name: 'Noor Ahmed', role: 'Bowler', c: false, img: 'noor.png' },
+          { name: 'Khaleel Ahmed', role: 'Bowler', c: false, img: 'khaleel.png' },
+          { name: 'Gurjapneet Singh', role: 'Bowler', c: false, img: 'gurjapneet.png' },
+          { name: 'Nathan Ellis', role: 'Bowler', c: false, img: 'elish.png' },
+          { name: 'Shreyas Gopal', role: 'Bowler', c: false, img: 'gopal.png' },
+          { name: 'Mukesh Choudhry', role: 'Bowler', c: false, img: 'mukesh.png' },
+          { name: 'Jamie Overton', role: 'All-Rounder', c: false, img: 'jamie.png' },
+          { name: 'Aman Khan', role: 'All-Rounder', c: false, img: 'aman.png' },
+          { name: 'Akeal Hosein', role: 'Bowler', c: false, img: 'akeal.png' },
+          { name: 'Ramakrishna Ghosh', role: 'All-Rounder', c: false, img: 'ghosh.png' },
+          { name: 'Anshul Kamboj', role: 'All-Rounder', c: false, img: 'kamboj.png' }
+        ]
+      },
+      {
+        id: 'mi', name: 'Mumbai Indians', short: 'MI',
+        color: '#004ba0', img: 'MI2008.png',
+        players: [
+          { name: "Hardik Pandya", role: "All-Rounder", c: true, img: "hardik.png" },
+          { name: "Rohit Sharma", role: "Batsman", c: false, img: "rohit.png" },
+          { name: "Jasprit Bumrah", role: "Bowler", c: false, img: "bumrah.png" },
+          { name: "Suryakumar Yadav", role: "Batsman", c: false, img: "surya.png" },
+          { name: "Am-Gazanfar", role: "WK-Batsman", c: false, img: "am.png" },
+          { name: "Tilak Varma", role: "Batsman", c: false, img: "tilak.png" },
+          { name: "Ashwini Kumar", role: "Bowler", c: false, img: "ashwini.png" },
+          { name: "Deepak Chahar", role: "Bowler", c: false, img: "deepak.png" },
+          { name: "Atharv Ankolekar", role: "Bowler", c: false, img: "atharv.png" },
+          { name: "Corbin Bosch", role: "Bowler", c: false, img: "bosch.png" },
+          { name: "Danish Malewar", role: "Bowler", c: false, img: "danish.png" },
+          { name: "Mayank Markande", role: "Bowler", c: false, img: "marknde.png" },
+          { name: "Mayank Rawat", role: "Bowler", c: false, img: "rawat.png" },
+          { name: "Mitchell Santner", role: "Bowler", c: false, img: "santner.png" },
+          { name: "Mohmad Iazhar", role: "Bowler", c: false, img: "izhar.png" },
+          { name: "Naman Dhir", role: "Bowler", c: false, img: "naman.png" },
+          { name: "Quenton De Cock", role: "Bowler", c: false, img: "decock.png" },
+          { name: "Raghu Sharma", role: "Bowler", c: false, img: "raghu.png" },
+          { name: "Raj Angad Bawa", role: "Bowler", c: false, img: "raj.png" },
+          { name: "Robin Minz", role: "Bowler", c: false, img: "robin.png" },
+          { name: "Ryan Rickleton", role: "Bowler", c: false, img: "ryan.png" },
+          { name: "Shardul Thakur", role: "Bowler", c: false, img: "sardul.png" },
+          { name: "Sherfane Ruthorford", role: "Bowler", c: false, img: "sherfane.png" },
+          { name: "Trent Boult", role: "Bowler", c: false, img: "boult.png" },
+          { name: "Will Jacks", role: "Bowler", c: false, img: "jacks.png" }
+        ]
+      },
+      {
+        id: 'rcb', name: 'Royal Challengers Bangalore', short: 'RCB',
+        color: '#ec1c24', img: 'RCB2008.png',
+        players: [
+          { name: "Rajat Patidar", role: "Batsman", c: true, img: "Rajat .png" },
+          { name: "Virat Kohli", role: "Batsman", c: false, img: "Virat.png" },
+          { name: "Yash Dayal", role: "Bowler", c: false, img: "dayal.png" },
+          { name: "Tim David", role: "Batsman", c: false, img: "david.png" },
+          { name: "Jacob Bethell", role: "Batsman", c: false, img: "bethell.png" },
+          { name: "Romario Shepherd", role: "All-Rounder", c: false, img: "Romario.png" },
+          { name: "Josh Hazlewood", role: "All-Rounder", c: false, img: "hazelwood.png" },
+          { name: "Nuwan Thushara", role: "All-Rounder", c: false, img: "nuwan.png" },
+          { name: "Devdutt Padikkal", role: "All-Rounder", c: false, img: "padikkal.png" },
+          { name: "Jitesh Sharma", role: "All-Rounder", c: false, img: "jitesh.png" },
+          { name: "Krunal Pandya", role: "All-Rounder", c: false, img: "krunal.png" },
+          { name: "Rasikh Dar", role: "All-Rounder", c: false, img: "rasik.png" },
+          { name: "Bhuvneshwar Kumar", role: "All-Rounder", c: false, img: "bhuvi.png" },
+          { name: "Jordan Cox", role: "All-Rounder", c: false, img: "Cox.png" },
+          { name: "Suyash Sharma", role: "All-Rounder", c: false, img: "suyash.png" },
+          { name: "Venkatesh Iyer", role: "All-Rounder", c: false, img: "Venky.png" },
+          { name: "Swapnil Singh", role: "All-Rounder", c: false, img: "swapnil .png" },
+          { name: "Jacob Duffy", role: "All-Rounder", c: false, img: "Duffy.png" },
+          { name: "Kanishk Chouhan", role: "All-Rounder", c: false, img: "Kanishk.png" },
+          { name: "Abhinandan Singh", role: "All-Rounder", c: false, img: "abhi.png" },
+          { name: "Mangesh Yadav", role: "All-Rounder", c: false, img: "Mangesh.png" },
+          { name: "Phil Salt", role: "All-Rounder", c: false, img: "salt.png" },
+          { name: "Satvik Deswal", role: "All-Rounder", c: false, img: "Satvik.png" },
+          { name: "Vicky Ostwal", role: "All-Rounder", c: false, img: "Vicky.png" },
+          { name: "Vihaan Malhotra", role: "All-Rounder", c: false, img: "Vihaan.png" }
+        ]
+      },
+      {
+        id: 'kkr', name: 'Kolkata Knight Riders', short: 'KKR',
+        color: '#3a225d', img: 'KKR2008.png',
+        players: [
+          { name: "Ajinkya Rahane", role: "Batsman", c: true, img: "Ajinkya.png" },
+          { name: "Manish Pandey", role: "Batsman", c: false, img: "Manish.png" },
+          { name: "Sunil Narine", role: "All-Rounder", c: false, img: "Sunil.png" },
+          { name: "Tim Seifert", role: "Bowler", c: false, img: "Tim12.png" },
+          { name: "Rahul Tripathi", role: "Bowler", c: false, img: "Rahul12.png" },
+          { name: "Rinku Singh", role: "Batsman", c: false, img: "Rinku.png" },
+          { name: "Varun Chakravarthy", role: "Bowler", c: false, img: "Varun.png" },
+          { name: "Rovman povel", role: "Bowler", c: false, img: "Rovman.png" },
+          { name: "Sarthak Ranjan", role: "Bowler", c: false, img: "Sarthak.png" },
+          { name: "Finn Alen", role: "Bowler", c: false, img: "Finn.png" },
+          { name: "Rachin Ravindra", role: "Bowler", c: false, img: "Rachin.png" },
+          { name: "Cameron Green", role: "Bowler", c: false, img: "Cameron.png" },
+          { name: "Ramandeepsingh", role: "Bowler", c: false, img: "Ramandeep.png" },
+          { name: "Anukul Roy", role: "Bowler", c: false, img: "Anukul.png" },
+          { name: "Kartik Tyagi", role: "Bowler", c: false, img: "Kartik12.png" },
+          { name: "Blessing Muzarbani", role: "Bowler", c: false, img: "Blessing.png" },
+          { name: "Aakashdeep", role: "Bowler", c: false, img: "Akash.png" },
+          { name: "Prashant Solanki", role: "Bowler", c: false, img: "Prashant12.png" },
+          { name: "Matheesa Pathirana", role: "Bowler", c: false, img: "Matheesha.png" },
+          { name: "Vaibhav Arora", role: "Bowler", c: false, img: "Vaibhav.png" },
+          { name: "Umran Malik", role: "Bowler", c: false, img: "Umran.png" },
+          { name: "Angkrish Raghuvanshi", role: "Bowler", c: false, img: "Angkrish.png" },
+          { name: "Harshit Rana", role: "Bowler", c: false, img: "Harshit.png" },
+          { name: "Tejashvi Singh", role: "Bowler", c: false, img: "Tejasvi.png" },
+          { name: "Daksh Kamra", role: "Bowler", c: false, img: "Daksh.png" }
+        ]
+      },
+      {
+        id: 'rr', name: 'Rajasthan Royals', short: 'RR',
+        color: '#ea1d63', img: 'RR2008.png',
+        players: [
+          { name: "Riyan Parag", role: "All-Rounder", c: true, img: "riyan.png" },
+          { name: "Dhruv Jurel", role: "WK-Batsman", c: false, img: "dhruv.png" },
+          { name: "Yashasvi Jaiswal", role: "Batsman", c: false, img: "jaiswal.png" },
+          { name: "Ravindra Jadeja", role: "Bowler", c: false, img: "8.png" },
+          { name: "Sam Curran", role: "Bowler", c: false, img: "18.png" },
+          { name: "Shubham Dubey ", role: "Bowler", c: false, img: "12.png" },
+          { name: "Vaibhav Suryavanshi", role: "Bowler", c: false, img: "6.png" },
+          { name: "Donovan Ferreria", role: "Bowler", c: false, img: "1.png" },
+          { name: "Shimron Hetmyer", role: "Bowler", c: false, img: "5.png" },
+          { name: "Lhuhan-Dre Pretorious", role: "Bowler", c: false, img: "2.png" },
+          { name: "Ravi Singh", role: "Bowler", c: false, img: "3.png" },
+          { name: "Aman Perala", role: "Bowler", c: false, img: "4.png" },
+          { name: "Adam Milne", role: "Bowler", c: false, img: "adam.png" },
+          { name: "Brijesh Sharma", role: "Bowler", c: false, img: "sharma.png" },
+          { name: "Jofra Archar", role: "Bowler", c: false, img: "jofra.png" },
+          { name: "Kuldeep Sen", role: "Bowler", c: false, img: "sen.png" },
+          { name: "Kwena Mafaka", role: "Bowler", c: false, img: "mafaka.png" },
+          { name: "Nandre Burger", role: "Bowler", c: false, img: "burger.png" },
+          { name: "Ravi Bisnoi", role: "Bowler", c: false, img: "bisnoi.png" },
+          { name: "Sandeep Sharma", role: "Bowler", c: false, img: "sandeep.png" },
+          { name: "Shushant Mishra", role: "Bowler", c: false, img: "mishra.png" },
+          { name: "Tushar Deshpande", role: "Bowler", c: false, img: "tushar.png" },
+          { name: "Yash Punja", role: "Bowler", c: false, img: "punja.png" },
+          { name: "Vignesh Puthur", role: "Bowler", c: false, img: "puthur.png" },
+          { name: "Yudhveer Singh", role: "Bowler", c: false, img: "yudhveer.png" }
+        ]
+      },
+      {
+        id: 'srh', name: 'Sunrisers Hyderabad', short: 'SRH',
+        color: '#f26522', img: 'SRH.png',
+        players: [
+          { name: "Pat Cummins", role: "Bowler", c: true, img: "Pat.png" },
+          { name: "Abhishek Sharma", role: "Batsman", c: false, img: "Abhishek.png" },
+          { name: "Travis Head", role: "Batsman", c: false, img: "Head.png" },
+          { name: "Heinrich Klaasen", role: "WK-Batsman", c: false, img: "Klassan.png" },
+          { name: "Nitish Kumar Reddy", role: "Batsman", c: false, img: "NKR.png" },
+          { name: "IShan Kishan", role: "Batsman", c: false, img: "ishan.png" },
+          { name: "Jaydev Unadkat", role: "Batsman", c: false, img: "jaydev.png" },
+          { name: "Harshal Patel", role: "Batsman", c: false, img: "harshal.png" },
+          { name: "Smaran Ravichandran", role: "Batsman", c: false, img: "smaran.png" },
+          { name: "Kamindu Mendish", role: "Batsman", c: false, img: "kamindu.png" },
+          { name: "Ishan Malinga", role: "Batsman", c: false, img: "malinga.png" },
+          { name: "Aniket Verma", role: "Batsman", c: false, img: "aniket.png" },
+          { name: "Zeeshan Anshari", role: "Batsman", c: false, img: "zeeshan.png" },
+          { name: "Harsh Dubey", role: "Batsman", c: false, img: "harsh.png" }
+        ]
+      },
+      {
+        id: 'pbks', name: 'Punjab Kings', short: 'PBKS',
+        color: '#ed1b24', img: 'PBKS2008.png',
+        players: [
+          { name: "Shreyas Iyer", role: "Batsman", c: true, img: "63961.png" },
+          { name: "PrabhSimran Singh", role: "WK-Batsman", c: false, img: "70222.png" },
+          { name: "Priyansh Arya", role: "All-Rounder", c: false, img: "71366.png" },
+          { name: "Arshdeep Singh", role: "Bowler", c: false, img: "67905.png" },
+          { name: "Yuzi Chahal", role: "Bowler", c: false, img: "9844.png" },
+          { name: "Marcus Stoinish", role: "Bowler", c: false, img: "4311.png" },
+          { name: "Marco Jansen", role: "Bowler", c: false, img: "69409.png" },
+          { name: "Yash Thakur", role: "Bowler", c: false, img: "66819.png" },
+          { name: "Hrpreet Brar", role: "Bowler", c: false, img: "70500.png" },
+          { name: "Shashank Singh", role: "Bowler", c: false, img: "63520.png" },
+          { name: "Nehal Vadhera", role: "Bowler", c: false, img: "69657.png" },
+          { name: "Azmatullah Omarzai", role: "Bowler", c: false, img: "67516.png" },
+          { name: "Pyala Avinash", role: "Bowler", c: false, img: "81901.png" },
+          { name: "Xavier Bartleet", role: "Bowler", c: false, img: "66516.png" },
+          { name: "Lokie Fergusion", role: "Bowler", c: false, img: "63719.png" },
+          { name: "Pravin Dubey", role: "Bowler", c: false, img: "63550.png" },
+          { name: "Musheer Khan", role: "Bowler", c: false, img: "94786.png" },
+          { name: "Suryansh Sedge", role: "Bowler", c: false, img: "71951.png" },
+          { name: "Harnoor SIngh", role: "Bowler", c: false, img: "89196.png" },
+          { name: "Vyshak Vijaykumar", role: "Bowler", c: false, img: "67628.png" },
+          { name: "Vishnu Vinod", role: "Bowler", c: false, img: "64783.png" },
+          { name: "Cooper Conoly", role: "Bowler", c: false, img: "74410.png" },
+          { name: "Mitchel Owen", role: "Bowler", c: false, img: "81813.png" },
+          { name: "Vishal Nishad", role: "Bowler", c: false, img: "126819.png" },
+          { name: "Ben Dwarsious", role: "Bowler", c: false, img: "64473.png" }
+        ]
+      },
+      {
+        id: 'gt', name: 'Gujarat Titans', short: 'GT',
+        color: '#1c3d5a', img: 'GT2008.png',
+        players: [
+          { name: "Shubman Gill", role: "Batsman", c: true, img: "gill.png" },
+          { name: "Sai Sudarshan", role: "All-Rounder", c: false, img: "sai.png" },
+          { name: "Rashid Khan", role: "Bowler", c: false, img: "rashid.png" },
+          { name: "Sharukh Khan", role: "Batsman", c: false, img: "sharukh.png" },
+          { name: "Glenn Phillips", role: "Batsman", c: false, img: "glenn.png" },
+          { name: "Jason Holder", role: "Batsman", c: false, img: "holder.png" },
+          { name: "Nishant Sindhu", role: "Batsman", c: false, img: "sindhu.png" },
+          { name: "Rahul Tewatia", role: "Batsman", c: false, img: "tewatia.png" },
+          { name: "Sai Kishore", role: "Batsman", c: false, img: "kishore.png" },
+          { name: "Washington Sundar", role: "Batsman", c: false, img: "sundar.png" },
+          { name: "Anuj Rawat", role: "Batsman", c: false, img: "anuj.png" },
+          { name: "Jos Buttler", role: "Batsman", c: false, img: "jos.png" },
+          { name: "Kumar Kushagra", role: "Batsman", c: false, img: "kumar.png" },
+          { name: "Tom Banton", role: "Batsman", c: false, img: "tom.png" },
+          { name: "Arshad Khan", role: "Batsman", c: false, img: "arshad.png" },
+          { name: "Ashok Sharma", role: "Batsman", c: false, img: "ashok.png" },
+          { name: "Gurnoor Brar", role: "Batsman", c: false, img: "gurnoor.png" },
+          { name: "Ishant Sharma", role: "Batsman", c: false, img: "ishant.png" },
+          { name: "Jayant Yadav", role: "Batsman", c: false, img: "jayant.png" },
+          { name: "Kagiso Rabada", role: "Batsman", c: false, img: "rabada.png" },
+          { name: "Luke Wood", role: "Batsman", c: false, img: "luke.png" },
+          { name: "Manav Suthar", role: "Batsman", c: false, img: "manav.png" },
+          { name: "MOhammed Siraj", role: "Batsman", c: false, img: "siraj.png" },
+          { name: "Prshidh Krishna", role: "Batsman", c: false, img: "krishna.png" },
+          { name: "Prithviraj Yarra", role: "Batsman", c: false, img: "prithvi.png" }
+        ]
+      },
+      {
+        id: 'lsg', name: 'Lucknow Super Giants', short: 'LSG',
+        color: '#355e3b', img: 'LSG2008.png',
+        players: [
+          { name: "Risabh Pant", role: "WK-Batsman", c: true, img: "pant.png" },
+          { name: "Arshin Kulkarni", role: "WK-Batsman", c: false, img: "kulkarni.png" },
+          { name: "Josh Inglish", role: "All-Rounder", c: false, img: "inglis.png" },
+          { name: "Nicholas Pooran", role: "WK-Batsman", c: false, img: "pooran.png" },
+          { name: "Mukul Choudhry", role: "All-Rounder", c: false, img: "mukul.png" },
+          { name: "Abdul Samad", role: "All-Rounder", c: false, img: "abdul.png" },
+          { name: "Aiden Markram", role: "All-Rounder", c: false, img: "markram.png" },
+          { name: "Akasht Raghuvanshi", role: "All-Rounder", c: false, img: "akshat.png" },
+          { name: "Himat Singh", role: "All-Rounder", c: false, img: "himmat.png" },
+          { name: "Matthew Breetzke", role: "All-Rounder", c: false, img: "breetzke.png" },
+          { name: "Mitchel Marsh", role: "All-Rounder", c: false, img: "marsh.png" },
+          { name: "Akash Singh", role: "All-Rounder", c: false, img: "aakashsingh.png" },
+          { name: "Anrich Nortje", role: "All-Rounder", c: false, img: "anrich.png" },
+          { name: "Arjun Tendulkar", role: "All-Rounder", c: false, img: "arjun.png" },
+          { name: "Avesh Khan", role: "All-Rounder", c: false, img: "avesh.png" },
+          { name: "Digvesh Rathi", role: "All-Rounder", c: false, img: "digvesh.png" },
+          { name: "M Siddharth", role: "All-Rounder", c: false, img: "siddharth.png" },
+          { name: "Mayank Yadav", role: "All-Rounder", c: false, img: "mayank.png" },
+          { name: "Mohammad Shammi", role: "All-Rounder", c: false, img: "shami.png" },
+          { name: "Mohsin Khan", role: "All-Rounder", c: false, img: "mohsin.png" },
+          { name: "Naman Tiwari", role: "All-Rounder", c: false, img: "tiwari.png" },
+          { name: "Prince YAdav", role: "All-Rounder", c: false, img: "prince.png" },
+          { name: "Ayush Badoni", role: "All-Rounder", c: false, img: "badoni.png" },
+          { name: "Shahbaz Ahmed", role: "All-Rounder", c: false, img: "shahbaz.png" },
+          { name: "Wanindu Hasranga", role: "All-Rounder", c: false, img: "wanindu.png" }
+        ]
+      },
+      {
+        id: 'dc', name: 'Delhi Capitals', short: 'DC',
+        color: '#004c93', img: 'DC2008.png',
+        players: [
+          { name: "Axar Patel", role: "WK-Batsman", c: true, img: "axar.png" },
+          { name: "Kl Rahul", role: "Batsman", c: false, img: "klr.png" },
+          { name: "Prithvi Shaw", role: "Batsman", c: false, img: "shaw.png" },
+          { name: "Mitchel Starc", role: "All-Rounder", c: false, img: "starc.png" },
+          { name: "Abhishek Porel", role: "All-Rounder", c: false, img: "porel.png" },
+          { name: "Ashutosh Sharma", role: "All-Rounder", c: false, img: "ashutosh.png" },
+          { name: "David Miller", role: "All-Rounder", c: false, img: "miller.png" },
+          { name: "Karun Nair", role: "All-Rounder", c: false, img: "karun.png" },
+          { name: "Nitish Rana", role: "All-Rounder", c: false, img: "nitish.png" },
+          { name: "Pathum Nishanka", role: "All-Rounder", c: false, img: "pathum.png" },
+          { name: "Sahil Parakh", role: "All-Rounder", c: false, img: "sahil.png" },
+          { name: "Sammeer Rizvi", role: "All-Rounder", c: false, img: "saeer.png" },
+          { name: "Tristan Stubbs", role: "All-Rounder", c: false, img: "stubbs.png" },
+          { name: "Ajay Mandal", role: "All-Rounder", c: false, img: "ajay.png" },
+          { name: "Aquib Nabi", role: "All-Rounder", c: false, img: "aquib.png" },
+          { name: "Madhav Tiwari", role: "All-Rounder", c: false, img: "madhav.png" },
+          { name: "Tripurana Vijay", role: "All-Rounder", c: false, img: "vijay.png" },
+          { name: "Vipraj Nigam", role: "All-Rounder", c: false, img: "vipraj.png" },
+          { name: "Ben Duckett", role: "All-Rounder", c: false, img: "ducket.png" },
+          { name: "Dushmantha Chameera", role: "All-Rounder", c: false, img: "chameera.png" },
+          { name: "Kuldeep Yadav", role: "All-Rounder", c: false, img: "kuldeep.png" },
+          { name: "Kyle Jemieson", role: "All-Rounder", c: false, img: "kyle.png" },
+          { name: "Lungi Ngidi", role: "All-Rounder", c: false, img: "lungi.png" },
+          { name: "Mukesh Kumar", role: "All-Rounder", c: false, img: "mk.png" },
+          { name: "T Natrajan", role: "All-Rounder", c: false, img: "t.png" }
+        ]
+      }
+    ];
+
+    var currentTeam = null;
+
+    // Build team grid
+    function buildGrid() {
+      var grid = document.getElementById('teamsGrid');
+      grid.innerHTML = '';
+
+      for (var i = 0; i < teams.length; i++) {
+        var t = teams[i];
+        var card = document.createElement('div');
+        card.className = 'team-card anim-up';
+        card.style.animationDelay = (i * 0.06) + 's';
+        card.onclick = (function(team) {
+          return function() { showTeam(team); };
+        })(t);
+
+        card.innerHTML =
+          '<div class="team-card-bg" style="background-image:url(' + t.img + ')"></div>' +
+          '<div class="team-card-gradient"></div>' +
+          '<div class="team-card-info" style="border-color:' + t.color + '">' +
+            '<h3 class="team-card-name">' + t.name + '</h3>' +
+            '<p class="team-card-short" style="color:' + t.color + '">' + t.short + '</p>' +
+          '</div>';
+
+        grid.appendChild(card);
+      }
+    }
+
+    // Show team players
+    function showTeam(team) {
+      currentTeam = team;
+      document.getElementById('teamsGrid').style.display = 'none';
+      var view = document.getElementById('teamView');
+      view.className = 'team-view show anim-slide';
+
+      // Switch video + audio
+      switchMedia(team.id);
+
+      document.getElementById('teamHeader').innerHTML =
+        '<h2 class="team-header-title" style="color:' + team.color + '">' + team.name + '</h2>' +
+        '<p class="team-header-sub">IPL 2026 Squad &bull; ' + team.players.length + ' Players</p>';
+
+      var grid = document.getElementById('playersGrid');
+      grid.innerHTML = '';
+
+      for (var i = 0; i < team.players.length; i++) {
+        var p = team.players[i];
+        var card = document.createElement('div');
+        card.className = 'player-card anim-up';
+        card.style.animationDelay = (i * 0.03) + 's';
+        card.style.position = 'relative';
+        card.onclick = (function(img) {
+          return function() { openModal(img); };
+        })(p.img);
+
+        card.innerHTML =
+          '<img src="' + p.img + '" alt="' + p.name + '">' +
+          '<div class="player-card-overlay"></div>' +
+          '<div class="player-card-info">' +
+            '<p class="player-role">' + p.role + '</p>' +
+            '<h3 class="player-name">' + p.name + '</h3>' +
+          '</div>' +
+          (p.c ? '<div class="player-captain">C</div>' : '');
+
+        grid.appendChild(card);
+      }
+    }
+
+    // Switch video and audio
+    function switchMedia(teamId) {
+      var allVids = document.querySelectorAll('.bg-video');
+      for (var i = 0; i < allVids.length; i++) {
+        var v = allVids[i].querySelector('video');
+        var a = allVids[i].querySelector('audio');
+        if (v) v.pause();
+        if (a) { a.pause(); a.currentTime = 0; }
+        allVids[i].style.opacity = '0';
+        allVids[i].style.pointerEvents = 'none';
+      }
+
+      var target = document.getElementById('vid-' + teamId);
+      if (target) {
+        target.style.opacity = '1';
+        target.style.pointerEvents = 'auto';
+        var vid = target.querySelector('video');
+        var aud = target.querySelector('audio');
+        if (vid) vid.play();
+        if (aud) {
+          aud.volume = 0.15;
+          aud.play();
+        }
+      }
+    }
+
+    // Stop all media
+    function stopAllMedia() {
+      var allVids = document.querySelectorAll('.bg-video');
+      for (var i = 0; i < allVids.length; i++) {
+        var v = allVids[i].querySelector('video');
+        var a = allVids[i].querySelector('audio');
+        if (v) v.pause();
+        if (a) { a.pause(); a.currentTime = 0; }
+        allVids[i].style.opacity = '0';
+        allVids[i].style.pointerEvents = 'none';
+      }
+    }
+
+    // Go back
+    function goBack() {
+      currentTeam = null;
+      stopAllMedia();
+      document.getElementById('teamView').className = 'team-view';
+      document.getElementById('teamsGrid').style.display = '';
+    }
+
+    // Modal
+    function openModal(src) {
+      document.getElementById('modalImg').src = src;
+      document.getElementById('playerModal').classList.add('show');
+    }
+
+    function closeModal() {
+      document.getElementById('playerModal').classList.remove('show');
+    }
+
+    // Init
+    buildGrid();
+  </script>
+</body>
+</html>
